@@ -1,6 +1,0 @@
-FROM python:2.7
-RUN ["mkdir", "-p", "/root/media"]
-ADD ["http://www.sample-videos.com/video/mkv/240/big_buck_bunny_240p_30mb.mkv", "/root/media/Avatar (2009).mkv"]
-CMD [ "/usr/bin/git clone" \
-    "https://BinaryMisfit:t4FP37RgH7hKE3Yr5L6M@bitbucket.org/BinaryMisfit/movie_tools/ " \
-    "/root/movie_tools"]

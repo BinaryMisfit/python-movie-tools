@@ -1,2 +1,0 @@
-FROM movie_tools
-CMD ["/root/movie_tools/apps/movievalidate.py", "/root/media/Avatar (2009).mkv"]
