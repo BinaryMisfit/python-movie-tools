@@ -43,6 +43,10 @@ def main():
 
         try:
             m4v_file = disklibrary.file_first(item_folder, 'm4v')
+            if m4v_file is None:
+                print '%s Failed' % item_folder
+                continue
+
             m4v_file = disklibrary.file_split(m4v_file)
 
             nfo_found = False
