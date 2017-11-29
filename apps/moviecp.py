@@ -37,7 +37,7 @@ def check_file(source_file):
 
     target_folder = COUCHPOTATO_UPLOAD_PATH + source_file
     if os.path.exists(target_folder):
-        return COUCHPOTATO_UPLOAD_PATH
+        return target_folder
 
 
 def notify_couchpotato(source_file):
