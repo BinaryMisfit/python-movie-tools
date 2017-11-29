@@ -28,12 +28,29 @@ def move_file(source_file):
     shutil.move(source_file, target_folder)
 
 
+def check_file(source_file):
+    """Check if file is already moved"""
+    import os
+    print 'Checking if file has to be moved to CouchPotato'
+    if os.path.exists(source_file):
+        return source_file
+
+    target_folder = COUCHPOTATO_UPLOAD_PATH + source_file
+    if os.path.exists(target_folder):
+        return COUCHPOTATO_UPLOAD_PATH
+
+
 def notify_couchpotato(source_file):
     """Notify CouchPotato of the new file"""
     import os
     import requests
+
     if os.path.exists(source_file):
         move_file(source_file)
+
+    source_file = check_file(source_file)
+    if source_file == "":
+        return 0
 
     notify_url = generate_complete_url(source_file)
     print 'Notifying CouchPotato'
