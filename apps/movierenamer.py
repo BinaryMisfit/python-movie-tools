@@ -58,6 +58,9 @@ def rename_movie(source_file):
     import disklibrary
     file_path = disklibrary.file_check(source_file, 'm4v')
     if file_path is None:
+        file_path = disklibrary.file_check(source_file, 'mkv')
+
+    if file_path is None:
         print 'File not found or incorrect type'
         return 2
 

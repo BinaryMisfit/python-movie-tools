@@ -97,6 +97,9 @@ def generate_nfo(source_file, title, year):
     import movielibrary
     file_path = disklibrary.file_check(source_file, 'm4v')
     if file_path is None:
+        file_path = disklibrary.file_check(source_file, 'mkv')
+
+    if file_path is None:
         print 'File %s not found or incorrect type' % source_file
         return 2
 

@@ -18,20 +18,6 @@ def movie_validate(source_file):
     return output
 
 
-def movie_converter(source_file):
-    """Convert the movie file"""
-    import movieconverter
-    output = movieconverter.movie_convert(source_file)
-    return output
-
-
-def movie_update(source_file):
-    """Update the movie information"""
-    import movieupdater
-    output = movieupdater.movie_update(source_file)
-    return output
-
-
 def nfo_update(source_file):
     """Update the movie information"""
     import movienfo
@@ -69,32 +55,11 @@ def process_mkv(source_file):
     output = movie_validate(source_file.full_path)
     if output != 0:
         sys.exit(output)
-
-    print 'Converting %s' % source_file.file_name
-    output = movie_converter(source_file.full_path)
+        
+    print 'Updating NFO for %s' % source_file.file_name
+    output = nfo_update(source_file.full_path)
     if output != 0:
         sys.exit(output)
-
-    source_file = disklibrary.file_first(source_file.file_path, 'm4v')
-    return disklibrary.file_split(source_file)
-
-
-def process_m4v(source_file):
-    """Process M4V file"""
-    import sys
-    import disklibrary
-    print 'Processing iTunes Video File'
-    nfo_file = disklibrary.file_first(source_file.file_path, 'nfo')
-    if nfo_file is None:
-        print 'Updating tags for %s' % source_file.file_name
-        output = movie_update(source_file.full_path)
-        if output != 0:
-            sys.exit(output)
-
-        print 'Updating NFO for %s' % source_file.file_name
-        output = nfo_update(source_file.full_path)
-        if output != 0:
-            sys.exit(output)
 
     output_file = target_folder(source_file.full_path)
     output = rename_movie(source_file.full_path)
@@ -126,10 +91,7 @@ def main():
         print 'Folder not found'
         sys.exit(0)
 
-    source_file = disklibrary.file_first(source_folder, 'm4v')
-    if source_file is None:
-        source_file = disklibrary.file_first(source_folder, 'mkv')
-
+    source_file = disklibrary.file_first(source_folder, 'mkv')
     source_file = disklibrary.file_split(source_file)
     if source_file is None:
         print 'No valid file found for processing'
@@ -137,9 +99,6 @@ def main():
 
     if source_file.file_extension == '.mkv':
         source_file = process_mkv(source_file)
-
-    if source_file.file_extension == '.m4v':
-        source_file = process_m4v(source_file)
 
     print 'Completed processing %s' % source_file.file_title
     sys.exit(0)

@@ -70,7 +70,7 @@ def main():
     import argparse
     print 'Starting CouchPotato Notifier'
     parser = argparse.ArgumentParser(
-        description='Renames a M4V file and all relevant files and tags')
+        description='Notifies CouchPotato of a new movie')
     parser.add_argument('folder', metavar='folder', type=str,
                         help='Folder to prepare')
     args = parser.parse_args()
