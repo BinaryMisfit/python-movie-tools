@@ -14,52 +14,38 @@
 
 def read_file_data(file_path):
     """Retrieve file data"""
+    import os
+    import sys
     import disklibrary
-    from dateutil import parser
-    from mutagen.mp4 import MP4, MP4StreamInfoError
-    try:
-        read_file = MP4(file_path.full_path)
-        movie_title = read_file['\xa9nam'][0]
-        movie_title = disklibrary.path_sane_name(movie_title)
-        movie_year = read_file['\xa9day'][0]
-        movie_year = parser.parse(movie_year).year
-        sort_name = read_file['sonm'][0]
-        sort_name = disklibrary.path_sane_name(sort_name)
-        sort_name = '%s (%s)' % (sort_name, movie_year)
-        movie_file = '%s (%s)' % (movie_title, movie_year)
-        movie_file = '%s/%s%s' % (file_path.file_path.replace(file_path.file_title, sort_name),
-                                  movie_file, file_path.file_extension)
-        movie_file = disklibrary.file_split(movie_file)
-        return movie_file
-    except MP4StreamInfoError as exception:
-        return '%s' % exception.message
+    from lxml import etree
+    read_file = disklibrary.file_first(file_path.file_path, 'nfo')
+    if read_file is None:
+        return
+
+    read_file = open(read_file)
+    read_content = read_file.readlines()
+    read_file.close()
+    read_content = read_content[:-1]
+    read_content = ''.join(read_content)
+    read_file = etree.fromstring(read_content)
+    movie_title = read_file.find('title').text
+    movie_title = disklibrary.path_sane_name(movie_title)
+    movie_year = read_file.find('year').text
+    sort_name = read_file.find('sorttitle').text
+    sort_name = disklibrary.path_sane_name(sort_name)
+    sort_name = '%s (%s)' % (sort_name, movie_year)
+    movie_file = '%s (%s)' % (movie_title, movie_year)
+    movie_file = '%s/%s%s' % (file_path.file_path.replace(file_path.file_title, sort_name),
+                              movie_file, file_path.file_extension)
+    movie_file = disklibrary.file_split(movie_file)
+    return movie_file
 
 
-def sorted_folder(file_path):
-    """Returns the name of the sorted folder"""
-    import disklibrary
-    from dateutil import parser
-    from mutagen.mp4 import MP4, MP4StreamInfoError
-    try:
-        read_file = MP4(file_path)
-        movie_year = read_file['\xa9day'][0]
-        movie_year = parser.parse(movie_year).year
-        sort_name = read_file['sonm'][0]
-        sort_name = disklibrary.path_sane_name(sort_name)
-        sort_name = '%s (%s)' % (sort_name, movie_year)
-    except MP4StreamInfoError as exception:
-        return '%s' % exception.message
-    return sort_name
-
-
-def rename_movie(source_file):
+def rename_movie(source_path):
     """Rename movie folder and content"""
     import os
     import disklibrary
-    file_path = disklibrary.file_check(source_file, 'm4v')
-    if file_path is None:
-        file_path = disklibrary.file_check(source_file, 'mkv')
-
+    file_path = disklibrary.file_first(source_path, 'mkv')
     if file_path is None:
         print 'File not found or incorrect type'
         return 2
@@ -67,7 +53,7 @@ def rename_movie(source_file):
     file_path = disklibrary.file_split(file_path)
     rename_file = read_file_data(file_path)
     if not rename_file:
-        print 'No file can be found'
+        print 'Required files missing'
         return 2
 
     file_list = os.listdir(file_path.file_path)
@@ -102,7 +88,7 @@ def main():
     import argparse
     print 'Starting Movie Renamer'
     parser = argparse.ArgumentParser(
-        description='Renames a M4V file and all relevant files and tags')
+        description='Renames a MKV file and all relevant files and tags')
     parser.add_argument('file', metavar='file', type=str,
                         help='File to be renamed')
     args = parser.parse_args()

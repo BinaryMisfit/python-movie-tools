@@ -95,8 +95,8 @@ def main():
         else:
             print '{0:70}'.format(item),
 
-        print 'M4V:',
-        movie_file = disklibrary.file_first(item_folder, 'm4v')
+        print 'MKV:',
+        movie_file = disklibrary.file_first(item_folder, 'mkv')
         if movie_file is None:
             print '{0:15}'.format('Not found'),
             continue
