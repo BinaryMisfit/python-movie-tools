@@ -55,14 +55,14 @@ def process_mkv(source_file):
     output = movie_validate(source_file.full_path)
     if output != 0:
         sys.exit(output)
-        
+
     print 'Updating NFO for %s' % source_file.file_name
     output = nfo_update(source_file.full_path)
     if output != 0:
         sys.exit(output)
 
     output_file = target_folder(source_file.full_path)
-    output = rename_movie(source_file.full_path)
+    output = rename_movie(source_file.file_path)
     if output != 0:
         sys.exit(output)
 
