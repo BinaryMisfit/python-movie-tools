@@ -131,7 +131,7 @@ def validate_file(source_file):
     conversion_needed = conversion_needed or len(source_mkv_file.audio_tracks) != 1
     print conversion_needed
     if not conversion_needed:
-        print 'File already in correct format"
+        print 'File already in correct format'
         return 0
 
     final_link = source_file
