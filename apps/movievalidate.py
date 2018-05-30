@@ -114,6 +114,8 @@ def validate_file(source_file):
         return 2
 
     source_mkv_file = source_mkv_file.mkv_file
+    print 'Video Tracks: ' + str(len(source_mkv_file.video_tracks))
+    print 'Audio Tracks: ' + str(len(source_mkv_file.audio_tracks))
     print 'Checking video tracks'
     use_video_track = find_valid_video_track(source_mkv_file)
     print 'Checking audio tracks'
@@ -127,12 +129,13 @@ def validate_file(source_file):
             print 'Selected MKV does not contain a valid audio track'
             return 2
 
-    print 'Video: ' + str(len(source_mkv_file.video_tracks))
-    print 'Audio: ' + str(len(source_mkv_file.audio_tracks))
-    if len(source_mkv_file.video_tracks) != 1 or len(source_mkv_file.audio_tracks) != 1:
+    convert_file = len(source_mkv_file.video_tracks) != 1
+    print convert_file
+    if  convert_file or len(source_mkv_file.audio_tracks) != 1:
         print 'File already in correct format'
         return 0
 
+    return 0
     final_link = source_file
     source_link = disklibrary.file_path(
         source_file.file_path, source_file.file_title + '.original')
