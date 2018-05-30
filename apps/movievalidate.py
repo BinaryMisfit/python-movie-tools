@@ -130,6 +130,7 @@ def validate_file(source_file):
             return 2
 
     convert_file = len(source_mkv_file.video_tracks) != 1
+    convert_file = convert_file or len(source_mkv_file.audio_tracks) != 1
     print convert_file
     if  convert_file or len(source_mkv_file.audio_tracks) != 1:
         print 'File already in correct format'
