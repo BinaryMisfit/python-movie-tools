@@ -41,6 +41,28 @@ def read_file_data(file_path):
     return movie_file
 
 
+def sorted_folder(file_path):
+    """Returns the name of the sorted folder"""
+    import disklibrary
+    from dateutil import parser
+    from lxml import etree
+    read_file = disklibrary.file_first(file_path.file_path, 'nfo')
+    if read_file is None:
+        return
+
+    read_file = open(read_file)
+    read_content = read_file.readlines()
+    read_file.close()
+    read_content = read_content[:-1]
+    read_content = ''.join(read_content)
+    read_file = etree.fromstring(read_content)
+    movie_year = read_file.find('year').text
+    sort_name = read_file.find('sorttitle').text
+    sort_name = disklibrary.path_sane_name(sort_name)
+    sort_name = '%s (%s)' % (sort_name, movie_year)
+    return sort_name
+
+
 def rename_movie(source_path):
     """Rename movie folder and content"""
     import os
