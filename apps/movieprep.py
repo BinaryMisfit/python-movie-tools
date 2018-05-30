@@ -25,17 +25,17 @@ def nfo_update(source_file):
     return output
 
 
-def rename_movie(source_file):
+def rename_movie(source_path):
     """Rename the movie and it's content"""
     import movierenamer
-    output = movierenamer.rename_movie(source_file)
+    output = movierenamer.rename_movie(source_path)
     return output
 
 
-def target_folder(source_file):
+def target_folder(source_path):
     """Returns the final folder for the move output"""
     import movierenamer
-    target_file = movierenamer.sorted_folder(source_file)
+    target_file = movierenamer.sorted_folder(source_path)
     return target_file
 
 
@@ -61,7 +61,7 @@ def process_mkv(source_file):
     if output != 0:
         sys.exit(output)
 
-    output_file = target_folder(source_file.full_path)
+    output_file = target_folder(source_file.file_path)
     output = rename_movie(source_file.file_path)
     if output != 0:
         sys.exit(output)

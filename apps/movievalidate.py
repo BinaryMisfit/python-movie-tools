@@ -127,10 +127,9 @@ def validate_file(source_file):
             print 'Selected MKV does not contain a valid audio track'
             return 2
 
-    conversion_needed = len(source_mkv_file.video_tracks) != 1
-    conversion_needed = conversion_needed or len(source_mkv_file.audio_tracks) != 1
-    print conversion_needed
-    if not conversion_needed:
+    print 'Video: ' + len(source_mkv_file.video_tracks)
+    print 'Audio: ' + len(source_mkv_file.audio_tracks)
+    if len(source_mkv_file.video_tracks) != 1 or len(source_mkv_file.audio_tracks) != 1:
         print 'File already in correct format'
         return 0
 
