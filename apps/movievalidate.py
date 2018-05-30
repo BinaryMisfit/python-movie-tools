@@ -131,12 +131,10 @@ def validate_file(source_file):
 
     convert_file = len(source_mkv_file.video_tracks) != 1
     convert_file = convert_file or len(source_mkv_file.audio_tracks) != 1
-    print convert_file
-    if  convert_file or len(source_mkv_file.audio_tracks) != 1:
+    if not convert_file:
         print 'File already in correct format'
         return 0
 
-    return 0
     final_link = source_file
     source_link = disklibrary.file_path(
         source_file.file_path, source_file.file_title + '.original')

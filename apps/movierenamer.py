@@ -46,7 +46,7 @@ def sorted_folder(file_path):
     import disklibrary
     from dateutil import parser
     from lxml import etree
-    read_file = disklibrary.file_first(file_path.file_path, 'nfo')
+    read_file = disklibrary.file_first(file_path, 'nfo')
     if read_file is None:
         return
 
