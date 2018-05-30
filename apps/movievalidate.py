@@ -116,7 +116,7 @@ def validate_file(source_file):
     source_mkv_file = source_mkv_file.mkv_file
     print 'Video Tracks: ' + str(len(source_mkv_file.video_tracks))
     print 'Audio Tracks: ' + str(len(source_mkv_file.audio_tracks))
-    print 'Subtitles: ' + str(len(source_mkv_file.subtitles))
+    print 'Subtitles: ' + str(len(source_mkv_file.subtitle_tracks))
     print 'Checking video tracks'
     use_video_track = find_valid_video_track(source_mkv_file)
     print 'Checking audio tracks'
