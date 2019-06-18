@@ -95,6 +95,7 @@ def movie_sort_name_builder(api_key, movie_data):
         part_count = len(collection['parts'])
         if 'parts' in collection and part_count > 0:
             movie_set = collection['parts']
+            movie_set = filter(lambda k: 'release_date' in k, movie_set)
             movie_set = sorted(movie_set, key=lambda k: k['release_date'])
             movie_index = next(index for (index, movie) in enumerate(movie_set)
                                if movie['title'] == movie_data['title'] and
