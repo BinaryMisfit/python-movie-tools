@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-"""Environment set to python"""
-
 ##########################################################################
 # MOVIE QUALITY CHECK
 # ###
