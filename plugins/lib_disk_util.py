@@ -6,26 +6,29 @@
 
 # Current Version: 0.0.1
 ##########################################################################
-from collections import namedtuple
 from pathlib import Path
+
+class DiskResult(object):
+    def __init__(self, result, data = None, error = None):
+        self.result = result
+        self.data = data
+        self.error = error
 
 
 def list_all_files(target_folder):
-    result = namedtuple('Result', 'Error')
     folder = Path(target_folder)
     if not folder.exists():
-        return result(None, 'Folder missing')
+        return DiskResult(False, error = 'Folder missing')
     
-    return result(folder.glob('**/*'), None)
+    return DiskResult(True, data = folder.glob('**/*'))
 
 
 def check_contains_file(target_folder, target_extension):
-    result = namedtuple('Result', 'Error')
     folder = Path(target_folder)
     if not folder.exists():
-        return result(None, 'Folder missing')
+        return DiskResult(False, error = 'Folder missing')
     
-    return result(folder.glob(target_extension), None)
+    return DiskResult(True, data = folder.glob(target_extension))
 
 
 def file_size_format(num, suffix='B'):
