@@ -47,12 +47,13 @@ def validate_mkv(file):
 
     movie_folder.folder_name = mkv_file.parent.name
     movie_folder.parent = mkv_file.parent
+    mkv_parent = Path(movie_folder.parent)
     print('Exclude MKV')
-    for file in mkv_file.glob('!*.mkv'):
+    for file in mkv_parent.glob('!*.mkv'):
         print(file.name)
 
     print('Include MKV')
-    for file in mkv_file.iterdir():
+    for file in mkv_parent.iterdir():
         print(file.name)
 
     needs_clean = sum(1 for x in mkv_file.glob('*.jpg')) > 0
