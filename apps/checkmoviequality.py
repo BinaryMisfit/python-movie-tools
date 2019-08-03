@@ -28,6 +28,7 @@ def get_media_info(source_file):
     media_info = MediaInfo.parse(source_file)
     return media_info;
 
+
 def get_video_quality(media_info):
     return_quality = "Unknown"
     for track in media_info.tracks:
