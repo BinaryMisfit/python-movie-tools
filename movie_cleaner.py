@@ -47,6 +47,14 @@ def validate_mkv(file):
 
     movie_folder.folder_name = mkv_file.parent.name
     movie_folder.parent = mkv_file.parent
+    print('Exclude MKV')
+    for file in mkv_file.glob('!*.mkv'):
+        print(file.name)
+
+    print('Include MKV')
+    for file in mkv_file.iterdir():
+        print(file.name)
+
     needs_clean = sum(1 for x in mkv_file.glob('*.jpg')) > 0
     needs_clean = needs_clean or sum(1 for x in mkv_file.glob('*.nfo')) > 0
     needs_clean = needs_clean or sum(1 for x in mkv_file.glob('*.srt')) > 0
