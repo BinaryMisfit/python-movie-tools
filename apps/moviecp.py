@@ -9,7 +9,7 @@
 
 # Current Version: 0.0.1
 ##########################################################################
-COUCHPOTATO_UPLOAD_PATH = '/Volumes/LianLi/CouchPotato2/Data/completed/'
+COUCHPOTATO_UPLOAD_PATH = '/Services/CouchPotato2/Data/completed/'
 COUCHPOTATO_NOTIFY_URL = 'http://localhost:6794/api/1e0598cb286b448b9515dc9a7427a775/' \
                          'renamer.scan/?media_folder=/Services/CouchPotato2/Data/completed/'
 

@@ -47,7 +47,7 @@ def file_check(check_file, file_type=None):
 
 
 def file_split(check_path):
-    """Split the path into seperate parts"""
+    """Split the path into separate parts"""
     import os
     import collections
     if check_path is None:
