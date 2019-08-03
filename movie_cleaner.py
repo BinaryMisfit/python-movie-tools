@@ -9,7 +9,6 @@
 # Current Version: 0.0.1
 ##########################################################################
 from pathlib import Path
-from colorama import init, Fore
 
 
 class MovieFolder(object):
@@ -120,13 +119,16 @@ def get_video_quality(movie_folder):
 
 def add_quality(movie_folder):
     movie_folder = get_video_quality(movie_folder)
-    movie_folder.new_name = '%s %s.%s' % (movie_folder.mkv_file.name, movie_folder.quality, movie_folder.mkv_file.suffix)
+    movie_folder.new_name = '%s %s.%s' % (
+        movie_folder.mkv_file.name, movie_folder.quality, movie_folder.mkv_file.suffix)
     movie_folder.needs_quality = False
     return movie_folder
 
 
 def main():
     """Main entry point for script"""
+    from colorama import init
+    from termcolor import colored
     import sys
     import argparse
     init()
@@ -139,31 +141,32 @@ def main():
     print('MKV File\t\t%s' % args.file)
     movie = validate_mkv(args.file)
     if movie.error:
-        print('Validation:\t\t%s%s' % movie.result, Fore.RED)
+        print('Validation:\t\t%s%s' %
+              colored('Failed - ', 'red'), colored(movie.result, 'red'))
     else:
-        print('Validation:\t\t%sSuccess' % Fore.GREEN)
+        print('Validation:\t\t%s' % colored('Success', 'green'))
 
     if movie.needs_clean:
         if not movie.error:
             movie = clean_movie_folder(movie)
             if movie.error:
-                print('%sCleanup:\t\t%sFailed - %s' %
-                      Fore.WHITE, Fore.RED, movie.result)
+                print('Cleanup:\t\t%s%s' %
+                      colored('Failed - ', 'red'), colored(movie.result, 'red'))
             else:
-                print('%sCleanup:\t\t%sSuccess' % Fore.WHITE, Fore.GREEN)
+                print('Cleanup:\t\t%s' % colored('Success', 'green'))
     else:
-        print('%sCleanup:\t\t%sSkipped' % Fore.WHITE, Fore.YELLOW)
+        print('Cleanup:\t\t%s' % colored('Skipped', 'yellow'))
 
     if movie.needs_quality:
         if not movie.error:
             movie = add_quality(movie)
             if movie.error:
-                print('%sQuality:\t\t%sFailed - %s' %
-                      Fore.WHITE, Fore.RED, movie.result)
+                print('Quality:\t\t%s%s' %
+                      colored('Failed - ', 'red'), colored(movie.result, 'red'))
             else:
-                print('%sQaulity:\t\t%sSuccess' % Fore.WHITE, Fore.GREEN)
+                print('Qaulity:\t\t%s' % colored('Success', 'green'))
     else:
-        print('%sQuality:\t\t%sSkipped' % Fore.WHITE, Fore.YELLOW)
+        print('Quality:\t\t%s' % colored('Skipped', 'yellow'))
 
     if movie.error:
         sys.exit(1)
