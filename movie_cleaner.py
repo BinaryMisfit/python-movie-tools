@@ -9,15 +9,17 @@
 # Current Version: 0.0.1
 ##########################################################################
 from pathlib import Path
+from colorama import init, Fore
 
 
 class MovieFolder(object):
     """Object containing all information for the script"""
 
-    def __init__(self, mkv_file, folder_name=None, parent=None,
+    def __init__(self, mkv_file, orignal_name = None, folder_name=None, parent=None,
                  needs_clean=False, new_parent=False, needs_quality=False, result='',
                  error=False):
         self.mkv_file = mkv_file
+        self.orignal_name = orignal_name
         self.folder_name = folder_name
         self.parent = parent
         self.needs_clean = needs_clean
@@ -27,9 +29,9 @@ class MovieFolder(object):
         self.error = error
 
     def __repr__(self):
-        return '<MovieFolder mkv_file: %s, folder_name: %s, parent: %s, ' \
+        return '<MovieFolder mkv_file: %s, orignal_name: %s, folder_name: %s, parent: %s, ' \
             'needs_clean: %r, new_parent: %r, needs_quality: %r, result: %s, error: %r>' % \
-            (self.mkv_file, self.folder_name, self.parent, self.needs_clean,
+            (self.mkv_file, self.folder_name, self.orignal_name, self.parent, self.needs_clean,
              self.new_parent, self.needs_quality, self.result, self.error)
 
     def __str__(self):
@@ -55,6 +57,7 @@ def validate_mkv(file):
         movie_folder.error = True
         return movie_folder
 
+    movie_folder.orignal_name = mkv_file.name
     movie_folder.folder_name = mkv_file.parent.name
     movie_folder.parent = mkv_file.parent
     mkv_parent = Path(movie_folder.parent)
@@ -82,6 +85,11 @@ def clean_movie_folder(movie_folder):
     return movie_folder
 
 
+def add_quality(movie_folder):
+    movie_folder.needs_quality = False
+    return movie_folder
+
+
 def main():
     """Main entry point for script"""
     import sys
@@ -97,20 +105,29 @@ def main():
     if movie.error:
         print('Validation:\t\t%s' % movie.result)
     else:
-        print('Validation:\t\tSuccess')
+        print('Validation:\t\t%xSuccess' % Fore.GREEN)
 
     if movie.needs_clean:
         if not movie.error:
             movie = clean_movie_folder(movie)
             if movie.error:
-                print('Cleanup:\t\tFailed - %s' % movie.result)
+                print('Cleanup:\t\t%sFailed - %s' % Fore.RED, movie.result)
+            else:
+                print('Cleanup:\t\tSuccess')
+    else:
+        print('Cleanup:\t\tSkipped')
+
+    if movie.needs_quality:
+        if not movie.error:
+            movie = add_quality(movie)            
+            if movie.error:
+                print('Cleanup:\t\t%sFailed - %s' % Fore.RED, movie.result)
             else:
                 print('Cleanup:\t\tSuccess')
     else:
         print('Cleanup:\t\tSkipped')
 
     if movie.error:
-        print('Failed\t\t%s' % movie.result)
         sys.exit(1)
     
     sys.exit(0)
