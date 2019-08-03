@@ -62,9 +62,8 @@ def validate_mkv(file):
     list_files.extend(mkv_parent.glob('*.jpg'))
     list_files.extend(mkv_parent.glob('*.nfo'))
     list_files.extend(mkv_parent.glob('*.srt'))
-    print(list_files)
-    print(list_files.count)
-    needs_clean = list_files.count > 0 
+    print(list_files.count())
+    needs_clean = list_files.count() > 0 
     movie_folder.needs_clean = needs_clean
     movie_folder.new_parent = not mkv_file.name == movie_folder.folder_name
     movie_folder.needs_quality = not '[' in mkv_file.name and not ']' in mkv_file.name
@@ -101,11 +100,14 @@ def main():
     else:
         print('Validation:\t\tSuccess')
 
-    if not movie.error:
-        movie = clean_movie_folder(movie)
-        print('Cleanup:\t\tSuccess')
+    if movie.needs_clean:
+        if not movie.error:
+            movie = clean_movie_folder(movie)
+            print('Cleanup:\t\tSuccess')
+        else:
+            print('Cleanup:\t\tFailed')
     else:
-        print('Cleanup:\t\tFailed')
+        print('Cleanup:\t\tSkipped')
 
     print(movie)
     output = 0
