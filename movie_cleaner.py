@@ -32,7 +32,7 @@ class MovieFolder(object):
     def __repr__(self):
         return '<MovieFolder mkv_file: %s, orignal_name: %s, new_name: %s, folder_name: %s, ' \
             'parent: %s, needs_clean: %r, new_parent: %r, needs_quality: %r, result: %s, ' \
-            ' error: %r>' % (self.mkv_file, self.orignal_name, self.new_name, self.folder_name, 
+            ' error: %r>' % (self.mkv_file, self.orignal_name, self.new_name, self.folder_name,
                              self.parent, self.needs_clean, self.new_parent, self.needs_quality,
                              self.result, self.error)
 
@@ -56,33 +56,32 @@ def clean_movie_folder(movie_folder):
 def get_video_quality(movie_folder):
     from pymediainfo import MediaInfo
     media_info = MediaInfo.parse(movie_folder.mkv_file)
-    return_quality = "Unknown"
+    return_quality = None
     for track in media_info.tracks:
         if track.track_type == "Video":
-            print "Width: " + track.sampled_width
-            print "Height: " + track.sampled_height
             if int(track.sampled_width) == 1920:
-                print "Format: 1080p"
                 return_quality = "1080p"
                 if int(track.sampled_height) >= 1000:
                     return_quality = "Bluray-" + return_quality
                 else:
                     return_quality = "HDTV-" + return_quality
             elif int(track.sampled_width) == 1280:
-                print "Format: 720p"
                 return_quality = "720p"
                 if int(track.sampled_height) >= 800:
-                    print "Type: Bluray"
                     return_quality = "Bluray-" + return_quality
                 else:
-                    print "Type: HDTV"
-                return_quality = "HDTV-" + return_quality
+                    return_quality = "HDTV-" + return_quality
     movie_folder.quality = return_quality
     return movie_folder
 
 
 def add_quality(movie_folder):
     movie_folder = get_video_quality(movie_folder)
+    if movie_folder.quality is None:
+        movie_folder.error = True
+        movie_folder.result = 'Unknown Movie Quality'
+        return movie_folder
+
     movie_folder.new_name = '%s [%s]%s' % (
         movie_folder.mkv_file.name, movie_folder.quality, movie_folder.mkv_file.suffix)
     movie_folder.needs_quality = False
@@ -162,7 +161,7 @@ def main():
                 print('Quality:\t\t%s%s' %
                       colored('Failed - ', 'red'), colored(movie.result, 'red'))
             else:
-                print('Qaulity:\t\t%s' % colored('Success', 'green'))
+                print('Quality:\t\t%s' % colored('Success', 'green'))
     else:
         print('Quality:\t\t%s' % colored('Skipped', 'yellow'))
 
