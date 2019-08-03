@@ -20,7 +20,7 @@ class MovieFolder(object):
 
     def __repr__(self):
         return '<MovieFolder mkv_file: %s, result = %s, error = %r>' % \
-            self.mkv_file, self.result, self.error
+            (self.mkv_file, self.result, self.error)
 
     def __str__(self):
         return repr(self)
