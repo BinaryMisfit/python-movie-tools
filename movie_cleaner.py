@@ -15,7 +15,7 @@ from colorama import init, Fore, Style
 class MovieFolder(object):
     """Object containing all information for the script"""
 
-    def __init__(self, mkv_file, orignal_name = None, folder_name=None, parent=None,
+    def __init__(self, mkv_file, orignal_name=None, folder_name=None, parent=None,
                  needs_clean=False, new_parent=False, needs_quality=False, result='',
                  error=False):
         self.mkv_file = mkv_file
@@ -94,6 +94,7 @@ def main():
     """Main entry point for script"""
     import sys
     import argparse
+    init()
     print 'Starting Movie Renamer'
     parser = argparse.ArgumentParser(
         description='Clean a MKV file name and all relevant files and tags')
@@ -103,33 +104,42 @@ def main():
     print('MKV File\t\t%s' % args.file)
     movie = validate_mkv(args.file)
     if movie.error:
-        print('Validation:\t\t%sFailed - %s%s' % Fore.RED, movie.result, Style.RESET_ALL)
+        print('Validation:\t\t%s' % movie.result)
+        print(Style.RESET_ALL)
     else:
-        print('Validation:\t\t%sSuccess%s' % Fore.GREEN, Style.RESET_ALL)
+        print('Validation:\t\t%sSuccess' % Fore.GREEN)
+        print(Style.RESET_ALL)
 
     if movie.needs_clean:
         if not movie.error:
             movie = clean_movie_folder(movie)
             if movie.error:
-                print('Cleanup:\t\t%sFailed - %s%s' % Fore.RED, movie.result, Style.RESET_ALL)
+                print('Cleanup:\t\t%sFailed - %s' % Fore.RED, movie.result)
+                print(Style.RESET_ALL)
             else:
-                print('Cleanup:\t\t%sSuccess%s' % Fore.GREEN, Style.RESET_ALL)
+                print('Cleanup:\t\t%sSuccess' % Fore.GREEN)
+                print(Style.RESET_ALL)
     else:
-        print('Cleanup:\t\t%sSkipped%s' % Fore.YELLOW, Style.RESET_ALL)
+        print('Cleanup:\t\t%sSkipped' % Fore.YELLOW)
+        print(Style.RESET_ALL)
 
     if movie.needs_quality:
         if not movie.error:
-            movie = add_quality(movie)            
+            movie = add_quality(movie)
             if movie.error:
-                print('Cleanup:\t\t%sFailed - %s%s' % Fore.RED, movie.result, Style.RESET_ALL)
+                print('Cleanup:\t\t%sFailed - %s' %
+                      Fore.RED, movie.result)
+                print(Style.RESET_ALL)
             else:
-                print('Cleanup:\t\t%sSuccess%s' % Fore.GREEN, Style.RESET_ALL)
+                print('Cleanup:\t\t%sSuccess' % Fore.GREEN)
+                print(Style.RESET_ALL)
     else:
-        print('Cleanup:\t\t%sSkipped%s' % Fore.YELLOW, Style.RESET_ALL)
+        print('Cleanup:\t\t%sSkipped' % Fore.YELLOW)
+        print(Style.RESET_ALL)
 
     if movie.error:
         sys.exit(1)
-    
+
     sys.exit(0)
 
 
