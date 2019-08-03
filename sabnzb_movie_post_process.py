@@ -91,7 +91,9 @@ def find_valid_video_track(file_data):
     """Check if the video tracks for the file contains a valid track"""
     if hasattr(file_data, 'video_tracks'):
         for video_track in file_data.video_tracks:
+            print('Video Track: #%d' % video_track.number)
             if hasattr(video_track, 'language'):
+                print('Video: %s', % video_track.language)
                 if video_track.language == 'English':
                     return video_track.number - 1
 
@@ -111,9 +113,12 @@ def find_valid_audio_track(file_data):
     """Check if the audio tracks for the file contains a valid track"""
     if hasattr(file_data, 'audio_tracks'):
         for audio_track in file_data.audio_tracks:
+            print('Audio Track: #%d' % audio_track.number)
             if hasattr(audio_track, 'channels'):
+                print('Channels: %d' % audio_track.channels)
                 if audio_track.channels in [6, 8]:
                     if hasattr(audio_track, 'language'):
+                        print('Language: %s' % audio_track.language)
                         if audio_track.language == 'English':
                             return audio_track.number - 1
 
@@ -138,11 +143,17 @@ def validate_conversion(file_data):
         if use_audio_track is None:
             return SABResult(False, error='No valid audio track')
 
+    if int(use_video_track) == 0:
+        return SABResult(False, error='No valid video track')
+
+    if int(use_audio_track) == 0:
+        return SABResult(False, error='No valid audio track')
+
     convert = len(file_data.video_tracks) != 1
     convert = convert or len(file_data.audio_tracks) != 1
     convert = convert or len(file_data.subtitle_tracks) > 0
     print('Validate MKV:\t\tConversion - %r' % convert)
-    print('Validate MKV:\t\tVideo: %s - Audio: %s', use_video_track, use_audio_track)
+    print('Validate MKV:\t\tVideo: {0} - Audio: {1}', use_video_track, use_audio_track)
     return SABResult(True, convert=True, video_track=use_video_track, audio_track=use_audio_track)
 
 
@@ -181,12 +192,6 @@ def create_output_file(source_file, output_file, video_track, audio_track):
     installed = cmd_exists(executable)
     if not installed:
         return SABResult(False, error='Package mkvtoolnix not found')
-
-    if int(video_track) == 0:
-        return SABResult(False, error='No video track')
-
-    if int(audio_track) == 0:
-        return SABResult(False, error='No audio track')
 
     command = '%s -o \"%s\" --track-order 0:%s,0:%s --video-tracks %s --audio-tracks %s ' \
               '--no-subtitles --no-chapters \"%s\"' \

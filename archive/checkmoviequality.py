@@ -8,22 +8,6 @@
 ##########################################################################
 
 
-def read_mkv_file(source_file):
-    """Retrieve MKV file information"""
-    import sys
-    import collections
-    import enzyme
-    from enzyme.exceptions import MalformedMKVError
-    result = collections.namedtuple('Result', 'mkv_file error')
-    with open(source_file, 'rb') as mkv_source:
-        try:
-            mkv_file = enzyme.MKV(mkv_source)
-        except MalformedMKVError:
-            return result(None, '[ERROR] %s' % sys.exc_info()[0])
-
-    return result(mkv_file, None)
-
-
 def get_media_info(source_file):
     from pymediainfo import MediaInfo
     media_info = MediaInfo.parse(source_file)
