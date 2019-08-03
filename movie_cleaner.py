@@ -55,11 +55,6 @@ def clean_movie_folder(movie_folder):
 
 def get_video_quality(movie_folder):
     from pymediainfo import MediaInfo
-    from lib_disk_util import file_size_format
-    movie_size = movie_folder.mkv_file.stat().st_size / 10 * 30
-    print(movie_folder.mkv_file.stat().st_size)
-    print(movie_size)
-    print(file_size_format(movie_folder.mkv_file.stat().st_size))
     media_info = MediaInfo.parse(movie_folder.mkv_file)
     return_quality = "Unknown"
     for track in media_info.tracks:
@@ -69,20 +64,18 @@ def get_video_quality(movie_folder):
             if int(track.sampled_width) == 1920:
                 print "Format: 1080p"
                 return_quality = "1080p"
+                if int(track.sampled_height) >= 1000:
+                    return_quality = "Bluray-" + return_quality
+                else:
+                    return_quality = "HDTV-" + return_quality
             elif int(track.sampled_width) == 1280:
                 print "Format: 720p"
                 return_quality = "720p"
-            if int(track.sampled_height) >= 1000:
-                print "Type: Bluray"
-                return_quality = "Bluray-" + return_quality
-            elif int(track.sampled_height) >= 800:
-                print "Type: HDTV"
-                return_quality = "HDTV-" + return_quality
-            elif int(track.sampled_height) >= 500:
-                print "Type: Bluray"
-                return_quality = "Bluray-" + return_quality
-            else:
-                print "Type: HDTV"
+                if int(track.sampled_height) >= 800:
+                    print "Type: Bluray"
+                    return_quality = "Bluray-" + return_quality
+                else:
+                    print "Type: HDTV"
                 return_quality = "HDTV-" + return_quality
     movie_folder.quality = return_quality
     return movie_folder
