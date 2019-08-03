@@ -14,22 +14,22 @@ class MovieFolder(object):
     """Object containing all information for the script"""
 
     def __init__(self, mkv_file, folder_name=None, parent=None,
-                 has_images=False, has_nfo=False, has_srt=False, result='',
+                 has_img=False, has_nfo=False, has_srt=False, result='',
                  error=False):
         self.mkv_file = mkv_file
         self.folder_name = folder_name
         self.parent = parent
-        self.has_images = has_images
+        self.has_img = has_img
         self.has_nfo = has_nfo
         self.has_srt = has_srt
         self.result = result
         self.error = error
 
     def __repr__(self):
-        return '<MovieFolder mkv_file: %s, parent: %s, has_images: %r, ' \
-            'result: %r, has_nfo: %r, has_srt: %r, error: %r>' % \
-            (self.mkv_file, self.parent, self.has_images, self.has_nfo,
-               self.has_srt,  self.result, self.error)
+        return '<MovieFolder mkv_file: %s, folder_name: %s, parent: %s, ' \
+            'has_img: %r, has_nfo: %r, has_srt: %r, result: %s, error: %r>' % \
+            (self.mkv_file, self.folder_name, self.parent, self.has_img,
+             self.has_nfo, self.has_srt, self.result, self.error)
 
     def __str__(self):
         return repr(self)
@@ -47,8 +47,8 @@ def validate_mkv(file):
 
     movie_folder.folder_name = mkv_file.parent.name
     movie_folder.parent = mkv_file.parent
-    movie_folder.has_images = sum(1 for x in mkv_file.glob('*.jpg')) > 0
-    movie_folder.has_nfo = sum(1 for x in mkv_file.glob('*.nfo')) > 0
+    movie_folder.has_img = sum(1 for x in mkv_file.glob('*.jpg')) > 0
+    movie_foider.has_nfo = sum(1 for x in mkv_file.glob('*.nfo')) > 0
     movie_folder.has_srt = sum(1 for x in mkv_file.glob('*.srt')) > 0
     return movie_folder
 
