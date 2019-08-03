@@ -16,12 +16,13 @@ class MovieFolder(object):
     """Object containing all information for the script"""
 
     def __init__(self, mkv_file, orignal_name=None, folder_name=None, parent=None,
-                 needs_clean=False, new_parent=False, needs_quality=False, result='',
-                 error=False):
+                 quality=None, needs_clean=False, new_parent=False, needs_quality=False,
+                 result='', error=False):
         self.mkv_file = mkv_file
         self.orignal_name = orignal_name
         self.folder_name = folder_name
         self.parent = parent
+        self.quality = quality
         self.needs_clean = needs_clean
         self.new_parent = new_parent
         self.needs_quality = needs_quality
@@ -30,9 +31,10 @@ class MovieFolder(object):
 
     def __repr__(self):
         return '<MovieFolder mkv_file: %s, orignal_name: %s, folder_name: %s, parent: %s, ' \
-            'needs_clean: %r, new_parent: %r, needs_quality: %r, result: %s, error: %r>' % \
-            (self.mkv_file, self.folder_name, self.orignal_name, self.parent, self.needs_clean,
-             self.new_parent, self.needs_quality, self.result, self.error)
+            'needs_clean: %r, new_parent: %r, needs_quality: %r, result: %s, ' \
+            ' error: %r>' % (self.mkv_file, self.folder_name, self.orignal_name,
+                             self.parent, self.needs_clean, self.new_parent, self.needs_quality,
+                             self.result, self.error)
 
     def __str__(self):
         return repr(self)
@@ -85,7 +87,38 @@ def clean_movie_folder(movie_folder):
     return movie_folder
 
 
+def get_video_quality(movie_folder):
+    from pymediainfo import MediaInfo
+    media_info = MediaInfo.parse(movie_folder.mkv_file)
+    return_quality = "Unknown"
+    for track in media_info.tracks:
+        if track.track_type == "Video":
+            print "Width: " + track.sampled_width
+            print "Height: " + track.sampled_height
+            if int(track.sampled_width) == 1920:
+                print "Format: 1080p"
+                return_quality = "1080p"
+            elif int(track.sampled_width) == 1280:
+                print "Format: 720p"
+                return_quality = "720p"
+            if int(track.sampled_height) >= 1000:
+                print "Type: Bluray"
+                return_quality = "Bluray-" + return_quality
+            elif int(track.sampled_height) >= 800:
+                print "Type: HDTV"
+                return_quality = "HDTV-" + return_quality
+            elif int(track.sampled_height) >= 500:
+                print "Type: Bluray"
+                return_quality = "Bluray-" + return_quality
+            else:
+                print "Type: HDTV"
+                return_quality = "HDTV-" + return_quality
+    movie_folder.quality = return_quality
+    return movie_folder
+
+
 def add_quality(movie_folder):
+    movie_folder = get_video_quality(movie_folder)
     movie_folder.needs_quality = False
     return movie_folder
 
@@ -106,13 +139,14 @@ def main():
     if movie.error:
         print('%sValidation:\t\t%s%s' % Fore.WHITE, movie.result, Fore.RED)
     else:
-        print('%sValidation:\t\t%sSuccess' % Fore.WHITE, Fore.GREEN)
+        print('%sValidation:\t\t%sSuccess' % Fore.CYAN, Fore.GREEN)
 
     if movie.needs_clean:
         if not movie.error:
             movie = clean_movie_folder(movie)
             if movie.error:
-                print('%sCleanup:\t\t%sFailed - %s' % Fore.WHITE, Fore.RED, movie.result)
+                print('%sCleanup:\t\t%sFailed - %s' %
+                      Fore.WHITE, Fore.RED, movie.result)
             else:
                 print('%sCleanup:\t\t%sSuccess' % Fore.WHITE, Fore.GREEN)
     else:
