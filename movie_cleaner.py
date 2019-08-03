@@ -48,7 +48,7 @@ def validate_mkv(file):
     movie_folder.folder_name = mkv_file.parent.name
     movie_folder.parent = mkv_file.parent
     movie_folder.has_img = sum(1 for x in mkv_file.glob('*.jpg')) > 0
-    movie_foider.has_nfo = sum(1 for x in mkv_file.glob('*.nfo')) > 0
+    movie_folder.has_nfo = sum(1 for x in mkv_file.glob('*.nfo')) > 0
     movie_folder.has_srt = sum(1 for x in mkv_file.glob('*.srt')) > 0
     return movie_folder
 
