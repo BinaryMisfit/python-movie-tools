@@ -64,7 +64,7 @@ def validate_mkv_file(file):
 
     if validate_success.result:
         if not validate_success.convert:
-            return SABResult(True, data=file, convert=True, video_track=validate_success.video_track, audio_track=validate_success.audio_track)
+            return SABResult(True, data=file, convert=False)
 
         return SABResult(True, data=file, convert=True, video_track=validate_success.video_track, audio_track=validate_success.audio_track)
 
@@ -130,11 +130,11 @@ def validate_conversion(file_data):
     use_video_track = find_valid_video_track(file_data)
     use_audio_track = find_valid_audio_track(file_data)
     if use_video_track is None:
-        return SABResult(False, error = 'No valid video track')
+        return SABResult(False, error='No valid video track')
 
     if use_audio_track is None:
         if use_audio_track is None:
-            return SABResult(False, error = 'No valid audio track')
+            return SABResult(False, error='No valid audio track')
 
     convert = len(file_data.video_tracks) != 1
     convert = convert or len(file_data.audio_tracks) != 1
@@ -144,11 +144,10 @@ def validate_conversion(file_data):
 
 
 def convert_mkv_file(folder, file, video_track, audio_track):
-    """Conver the MKV file if required"""
+    """Convert the MKV file if required"""
     convert_success = backup_original_file(folder, file)
     if convert_success.result:
-        convert_success = create_output_file(
-            file, convert_success.data, video_track, audio_track)
+        return create_output_file(convert_success.data, file, video_track, audio_track)
 
     return SABResult(False, error=convert_success.error)
 
@@ -160,8 +159,6 @@ def backup_original_file(folder, file):
     backup_name = '%s%s' % (file.name, '.original')
     backup_folder = Path(folder)
     backup_file = backup_folder.joinpath(backup_name)
-    print('Folder: %s' % folder)
-    print('File: %s' % file)
     backup_success = rename_file(str(file), str(backup_file))
     if backup_success.result:
         backup_file = Path(backup_success.data)
@@ -175,23 +172,24 @@ def backup_original_file(folder, file):
 
 def create_output_file(source_file, output_file, video_track, audio_track):
     """Generate a new MKV output file with only valid tracks"""
-    print('create_output_file')
     from delegator import run
-    from lib_disk_util import cmd_exists
+    from lib_disk_util import cmd_exists, delete_file
     executable = '/usr/local/bin/mkvmerge'
     installed = cmd_exists(executable)
     if not installed:
-        return SABResult(False, error = 'Package mkvtoolnix not found')
+        return SABResult(False, error='Package mkvtoolnix not found')
 
     command = '%s -o \"%s\" --track-order 0:%s,0:%s --video-tracks %s --audio-tracks %s ' \
               '--no-subtitles --no-chapters \"%s\"' \
-        % (executable, source_file, video_track, audio_track, video_track, audio_track, output_file)
-    print(command)
+        % (executable, output_file, video_track, audio_track, video_track, audio_track, source_file)
     output = run(command)
-    if output.return_code != 0:
-        return SABResult(False, error = 'Command output\n%s' % output.out)
+    result_code = output.return_code
+    result_content = output.out
+    if int(result_code) == 0:
+        delete_file(source_file)
+        return SABResult(True, data=output_file)
 
-    return SABResult(True)
+    return SABResult(False, error='Command output\n%s' % result_content)
 
 
 def main():
@@ -211,29 +209,34 @@ def main():
         print('Skipping - Post processing failed with status %s' % sab_pp_status)
         sys.exit(0)
 
-    process_success = check_valid_files(sab_directory)
-    if process_success.result:
+    """Validate files exists and can be processed"""
+    validate_files_result = check_valid_files(sab_directory)
+    script_success = validate_files_result
+    if validate_files_result.result:
         print('Validate Files:\t\tSuccess')
     else:
         print('Validate Files:\t\tFailed')
 
+    """Check a valid MKV source exists"""
     mkv_source = None
-    if process_success.result:
-        mkv_source = process_success.data
-        process_success = validate_mkv_file(mkv_source)
-        if process_success.result:
+    if validate_files_result.result:
+        mkv_source = validate_files_result.data
+        validate_mkv_result = validate_mkv_file(mkv_source)
+        script_success = validate_mkv_result
+        if validate_mkv_result.result:
             print('Validate MKV:\t\tSuccess')
         else:
             print('Validate MKV:\t\tFailed')
     else:
        print('Validate MKV:\t\tFailed')
 
-    if process_success.result:
-        if process_success.convert:
-            process_success = convert_mkv_file(
-                mkv_source, process_success.data, process_success.video_track, process_success.audio_track)
-            print(process_success)
-            if process_success.result:
+    """Convert MKV if required"""
+    if validate_mkv_result.result:
+        if validate_mkv_result.convert:
+            convert_result = convert_mkv_file(
+                sab_directory, validate_mkv_result.data, validate_mkv_result.video_track, validate_files_result.audio_track)
+            script_success = convert_result
+            if convert_result.result:
                 print('Convert MKV:\t\tSuccess')
             else:
                 print('Convert MKV:\t\tFailed')
@@ -242,15 +245,14 @@ def main():
     else:
        print('Convert MKV:\t\tFailed')
 
-    if process_success.result:
-        print('Completed')
+    """Handle script result and completion"""
+    if script_success.result:
         sys.exit(0)
 
-    if process_success.error is None:
-        print('Failed')
+    if script_success.error is None:
         sys.exit(1)
 
-    print('Failed %s' % process_success.error)
+    print('Failed:\t\t\t%s' % script_success.error)
     sys.exit(1)
 
 

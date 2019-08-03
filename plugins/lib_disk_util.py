@@ -45,19 +45,25 @@ def check_contains_file(target_folder, target_extension):
 def rename_file(source, target):
     """Rename file"""
     source_file = Path(source)
-    target_file = Path(target)
     if not source_file.exists():
-        return DiskResult(False, error = 'Source not found')
+        return DiskResult(False, error = 'File not found %s' % source)
 
-    if target_file.exists():
-        target_file.unlink();
-
+    delete_file(target)
+    target_file = Path(target)
     source_file.rename(target_file)
     target_file = Path(target)
     if not target_file.exists():
         return DiskResult(False, error = 'Rename failed')
 
     return DiskResult(True, data = str(target_file))
+
+
+def delete_file(target):
+    """Delete a file"""
+    target_file = Path(target)
+
+    if target_file.exists():
+        target_file.unlink()
 
 
 def file_size_format(num, suffix='B'):
