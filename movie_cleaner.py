@@ -45,11 +45,16 @@ def validate_mkv(file):
         movie_folder.error = True
         return movie_folder
 
+    if not mkv_file.stem == 'mkv':
+        movie_folder.result = "File is not a valid MKV"
+        movie_folder.error = True
+        return movie_folder
+
     movie_folder.folder_name = mkv_file.parent.name
     movie_folder.parent = mkv_file.parent
     mkv_parent = Path(movie_folder.parent)
     print('Exclude MKV')
-    for file in mkv_parent.glob('!*.mkv'):
+    for file in mkv_parent.glob('[!*.mkv]'):
         print(file.name)
 
     print('Include MKV')
