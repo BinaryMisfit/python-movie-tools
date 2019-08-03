@@ -106,7 +106,7 @@ def main():
     if movie.error:
         print('%sValidation:\t\t%s%s' % Fore.WHITE, movie.result, Fore.RED)
     else:
-        print('%sValidation:\t\t%sSuccess' % Fore.GREEN)
+        print('%sValidation:\t\t%sSuccess' % Fore.WHITE, Fore.GREEN)
 
     if movie.needs_clean:
         if not movie.error:

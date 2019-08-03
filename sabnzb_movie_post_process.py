@@ -181,6 +181,12 @@ def create_output_file(source_file, output_file, video_track, audio_track):
     if not installed:
         return SABResult(False, error='Package mkvtoolnix not found')
 
+    if int(video_track) == 0:
+        return SABResult(False, error='No video track')
+
+    if int(audio_track) == 0:
+        return SABResult(False, error='No audio track')
+
     command = '%s -o \"%s\" --track-order 0:%s,0:%s --video-tracks %s --audio-tracks %s ' \
               '--no-subtitles --no-chapters \"%s\"' \
         % (executable, output_file, video_track, audio_track, video_track, audio_track, source_file)
