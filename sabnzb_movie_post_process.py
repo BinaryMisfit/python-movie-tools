@@ -55,24 +55,6 @@ def check_valid_files(folder):
     return SABResult(True, data=mkv_file)
 
 
-def validate_mkv_file(file):
-    """Manage the conversion process for the MKV files"""
-    if file is None:
-        return SABResult(False, error='File not found')
-
-    validate_success = read_mkv_file(str(file))
-    if validate_success.result:
-        validate_success = validate_conversion(validate_success.data)
-
-    if validate_success.result:
-        if not validate_success.convert:
-            return SABResult(True, data=file, convert=False)
-
-        return SABResult(True, data=file, convert=True, video_track=validate_success.video_track, audio_track=validate_success.audio_track)
-
-    return SABResult(False, error=validate_success.error)
-
-
 def read_mkv_file(file):
     """Retrieve MKV file information"""
     import sys
@@ -81,6 +63,7 @@ def read_mkv_file(file):
     with open(file, 'rb') as mkv_source:
         try:
             mkv_file = enzyme.MKV(mkv_source)
+            print(mkv_file)
         except MalformedMKVError:
             return SABResult(False, error='[ERROR] %s' % sys.exc_info()[0])
 
@@ -134,8 +117,13 @@ def find_valid_audio_track(file_data):
                             return audio_track.number - 1
 
 
-def validate_conversion(file_data):
+def validate_conversion(file):
     """Validate the MKV file contains required tracks"""
+    mkv_file = read_mkv_file(str(file))
+    if not mkv_file.result:
+        return SABResult(False, error='Error reading MKV file')
+
+    file_data = mkv_file.data
     use_video_track = find_valid_video_track(file_data)
     use_audio_track = find_valid_audio_track(file_data)
     if use_video_track is None:
@@ -149,17 +137,23 @@ def validate_conversion(file_data):
     convert = convert or len(file_data.audio_tracks) != 1
     convert = convert or len(file_data.subtitle_tracks) > 0
     print('Validate MKV:\t\tConversion - %r' % convert)
-    print('Validate MKV:\t\tVideo: {0} - Audio: {1}', use_video_track, use_audio_track)
+    print('Validate MKV:\t\tVideo: {0} - Audio: {1}'.format(use_video_track, use_audio_track))
     return SABResult(True, convert=True, video_track=use_video_track, audio_track=use_audio_track)
 
 
-def convert_mkv_file(folder, file, video_track, audio_track):
-    """Convert the MKV file if required"""
-    convert_success = backup_original_file(folder, file)
-    if convert_success.result:
-        return create_output_file(convert_success.data, file, video_track, audio_track)
+def validate_mkv_file(file):
+    """Manage the conversion process for the MKV files"""
+    if file is None:
+        return SABResult(False, error='File not found')
 
-    return SABResult(False, error=convert_success.error)
+    validate_success = validate_conversion(str(file))
+    if validate_success.result:
+        if not validate_success.convert:
+            return SABResult(True, data=file, convert=False)
+
+        return SABResult(True, data=file, convert=True, video_track=validate_success.video_track, audio_track=validate_success.audio_track)
+
+    return SABResult(False, error=validate_success.error)
 
 
 def backup_original_file(folder, file):
@@ -192,6 +186,7 @@ def create_output_file(source_file, output_file, video_track, audio_track):
     command = '%s -o \"%s\" --track-order 0:%s,0:%s --video-tracks %s --audio-tracks %s ' \
               '--no-subtitles --no-chapters \"%s\"' \
         % (executable, output_file, video_track, audio_track, video_track, audio_track, source_file)
+    print(command)
     output = run(command)
     result_code = output.return_code
     result_content = output.out
@@ -200,6 +195,43 @@ def create_output_file(source_file, output_file, video_track, audio_track):
         return SABResult(True, data=output_file)
 
     return SABResult(False, error='Command output\n%s' % result_content)
+
+
+def validate_output_file(source_file):
+    """Validate the MKV file contains required tracks"""
+    mkv_file = read_mkv_file(source_file)
+    if not mkv_file.result:
+        return SABResult(False, error='Error reading MKV file')
+
+    file_data = mkv_file.data
+    use_video_track = find_valid_video_track(file_data)
+    use_audio_track = find_valid_audio_track(file_data)
+    if use_video_track is None:
+        return SABResult(False, error='No valid video track')
+
+    if use_audio_track is None:
+        if use_audio_track is None:
+            return SABResult(False, error='No valid audio track')
+
+    valid = len(file_data.video_tracks) == 1
+    valid = valid or len(file_data.audio_tracks) == 1
+    valid = valid or len(file_data.subtitle_tracks) == 0
+    if not valid:
+        return SABResult(False, error='No valid video track')
+
+    return SABResult(True, data=source_file)
+
+
+def convert_mkv_file(folder, file, video_track, audio_track):
+    """Convert the MKV file if required"""
+    convert_success = backup_original_file(folder, file)
+    if convert_success.result:
+        convert_success = create_output_file(convert_success.data, file, video_track, audio_track)
+
+    if convert_success.result:
+        convert_success = validate_output_file(convert_success.data)
+
+    return SABResult(False, error=convert_success.error)
 
 
 def main():

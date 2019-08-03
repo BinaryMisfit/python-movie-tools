@@ -76,6 +76,7 @@ def get_video_quality(movie_folder):
 
 
 def add_quality(movie_folder):
+    import sys
     movie_folder = get_video_quality(movie_folder)
     if movie_folder.quality is None:
         movie_folder.error = True
@@ -86,8 +87,14 @@ def add_quality(movie_folder):
         movie_folder.mkv_file.stem, movie_folder.quality, movie_folder.mkv_file.suffix)
     movie_update = Path(movie_folder.parent)    
     movie_update = movie_update.joinpath(movie_folder.new_name)
-    print(movie_update.as_posix)
-    movie_folder.needs_quality = False
+    try:
+        movie_folder.mkv_file.rename(movie_update)
+        movie_folder.mkv_file = movie_update
+        movie_folder.needs_quality = False
+    except:
+        movie_folder.error = True
+        movie_folder.result = sys.exc_info()[0]
+
     return movie_folder
 
 
