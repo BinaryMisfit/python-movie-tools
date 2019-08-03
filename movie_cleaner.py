@@ -31,10 +31,13 @@ def validate_mkv(file):
     from pathlib import Path
     mkv_file = Path(file)
     movie_folder = MovieFolder(mkv_file)
+    print(movie_folder)
     if not mkv_file.exists():
         movie_folder.result = "File not found"
         movie_folder.error = True
         return movie_folder
+
+    return movie_folder
 
 
 def main():
@@ -49,6 +52,7 @@ def main():
     args = parser.parse_args()
     print('MKV File\t\t%s' % args.file)
     movie = validate_mkv(args.file)
+    print(movie)
     if movie.error:
         print('Validation:\t\t%s' % movie.result)
     else:
