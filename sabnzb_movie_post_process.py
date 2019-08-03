@@ -142,6 +142,7 @@ def validate_conversion(file_data):
     convert = convert or len(file_data.audio_tracks) != 1
     convert = convert or len(file_data.subtitle_tracks) > 0
     print('Validate MKV:\t\tConversion - %r' % convert)
+    print('Validate MKV:\t\tVideo: %s - Audio: %s', use_video_track, use_audio_track)
     return SABResult(True, convert=True, video_track=use_video_track, audio_track=use_audio_track)
 
 

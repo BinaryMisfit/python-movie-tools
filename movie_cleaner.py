@@ -40,40 +40,6 @@ class MovieFolder(object):
         return repr(self)
 
 
-def validate_mkv(file):
-    """Check if the MKV file exists and populate MovieFolder"""
-    mkv_file = Path(file)
-    movie_folder = MovieFolder(mkv_file)
-    if not mkv_file.exists():
-        movie_folder.result = "Failed - File not found"
-        movie_folder.error = True
-        return movie_folder
-
-    if mkv_file.is_dir():
-        movie_folder.result = "Failed - Specify MKV File"
-        movie_folder.error = True
-        return movie_folder
-
-    if not mkv_file.suffix == '.mkv':
-        movie_folder.result = "Failed - Not a MKV file"
-        movie_folder.error = True
-        return movie_folder
-
-    movie_folder.orignal_name = mkv_file.name
-    movie_folder.folder_name = mkv_file.parent.name
-    movie_folder.parent = mkv_file.parent
-    mkv_parent = Path(movie_folder.parent)
-    list_files = []
-    list_files.extend(mkv_parent.glob('*.jpg'))
-    list_files.extend(mkv_parent.glob('*.nfo'))
-    list_files.extend(mkv_parent.glob('*.srt'))
-    needs_clean = len(list_files) > 0
-    movie_folder.needs_clean = needs_clean
-    movie_folder.new_parent = not mkv_file.name == movie_folder.folder_name
-    movie_folder.needs_quality = not '[' in mkv_file.name and not ']' in mkv_file.name
-    return movie_folder
-
-
 def clean_movie_folder(movie_folder):
     clean_folder = Path(movie_folder.parent)
     clean_files = []
@@ -89,6 +55,11 @@ def clean_movie_folder(movie_folder):
 
 def get_video_quality(movie_folder):
     from pymediainfo import MediaInfo
+    from lib_disk_util import file_size_format
+    movie_size = movie_folder.mkv_file.stat().st_size / 10 * 30
+    print(movie_folder.mkv_file.stat().st_size)
+    print(movie_size)
+    print(file_size_format(movie_folder.mkv_file.stat().st_size))
     media_info = MediaInfo.parse(movie_folder.mkv_file)
     return_quality = "Unknown"
     for track in media_info.tracks:
@@ -122,6 +93,40 @@ def add_quality(movie_folder):
     movie_folder.new_name = '%s %s.%s' % (
         movie_folder.mkv_file.name, movie_folder.quality, movie_folder.mkv_file.suffix)
     movie_folder.needs_quality = False
+    return movie_folder
+
+
+def validate_mkv(file):
+    """Check if the MKV file exists and populate MovieFolder"""
+    mkv_file = Path(file)
+    movie_folder = MovieFolder(mkv_file)
+    if not mkv_file.exists():
+        movie_folder.result = "Failed - File not found"
+        movie_folder.error = True
+        return movie_folder
+
+    if mkv_file.is_dir():
+        movie_folder.result = "Failed - Specify MKV File"
+        movie_folder.error = True
+        return movie_folder
+
+    if not mkv_file.suffix == '.mkv':
+        movie_folder.result = "Failed - Not a MKV file"
+        movie_folder.error = True
+        return movie_folder
+
+    movie_folder.orignal_name = mkv_file.name
+    movie_folder.folder_name = mkv_file.parent.name
+    movie_folder.parent = mkv_file.parent
+    mkv_parent = Path(movie_folder.parent)
+    list_files = []
+    list_files.extend(mkv_parent.glob('*.jpg'))
+    list_files.extend(mkv_parent.glob('*.nfo'))
+    list_files.extend(mkv_parent.glob('*.srt'))
+    needs_clean = len(list_files) > 0
+    movie_folder.needs_clean = needs_clean
+    movie_folder.new_parent = not mkv_file.name == movie_folder.folder_name
+    movie_folder.needs_quality = not '[' in mkv_file.name and not ']' in mkv_file.name
     return movie_folder
 
 
@@ -168,6 +173,7 @@ def main():
     else:
         print('Quality:\t\t%s' % colored('Skipped', 'yellow'))
 
+    print(movie)
     if movie.error:
         sys.exit(1)
 
