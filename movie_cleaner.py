@@ -15,12 +15,13 @@ from colorama import init, Fore
 class MovieFolder(object):
     """Object containing all information for the script"""
 
-    def __init__(self, mkv_file, orignal_name=None, folder_name=None, parent=None,
-                 quality=None, needs_clean=False, new_parent=False, needs_quality=False,
-                 result='', error=False):
+    def __init__(self, mkv_file, orignal_name=None, new_name=None, folder_name=None,
+                 parent=None, quality=None, needs_clean=False, new_parent=False,
+                 needs_quality=False, result='', error=False):
         self.mkv_file = mkv_file
         self.orignal_name = orignal_name
         self.folder_name = folder_name
+        self.new_name = new_name
         self.parent = parent
         self.quality = quality
         self.needs_clean = needs_clean
@@ -30,9 +31,9 @@ class MovieFolder(object):
         self.error = error
 
     def __repr__(self):
-        return '<MovieFolder mkv_file: %s, orignal_name: %s, folder_name: %s, parent: %s, ' \
-            'needs_clean: %r, new_parent: %r, needs_quality: %r, result: %s, ' \
-            ' error: %r>' % (self.mkv_file, self.folder_name, self.orignal_name,
+        return '<MovieFolder mkv_file: %s, orignal_name: %s, new_name: %s, folder_name: %s, ' \
+            'parent: %s, needs_clean: %r, new_parent: %r, needs_quality: %r, result: %s, ' \
+            ' error: %r>' % (self.mkv_file, self.folder_name, self.orignal_name, self.new_name,
                              self.parent, self.needs_clean, self.new_parent, self.needs_quality,
                              self.result, self.error)
 
@@ -119,6 +120,7 @@ def get_video_quality(movie_folder):
 
 def add_quality(movie_folder):
     movie_folder = get_video_quality(movie_folder)
+    movie_folder.new_name = '%s %s.%s' % (movie_folder.mkv_file.name, movie_folder.quality, movie_folder.mkv_file.suffix)
     movie_folder.needs_quality = False
     return movie_folder
 
@@ -137,9 +139,9 @@ def main():
     print('MKV File\t\t%s' % args.file)
     movie = validate_mkv(args.file)
     if movie.error:
-        print('%sValidation:\t\t%s%s' % Fore.WHITE, movie.result, Fore.RED)
+        print('Validation:\t\t%s%s' % movie.result, Fore.RED)
     else:
-        print('%sValidation:\t\t%sSuccess' % Fore.CYAN, Fore.GREEN)
+        print('Validation:\t\t%sSuccess' % Fore.GREEN)
 
     if movie.needs_clean:
         if not movie.error:
