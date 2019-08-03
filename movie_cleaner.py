@@ -20,9 +20,9 @@ class MovieFolder(object):
         self.mkv_file = mkv_file
         self.folder_name = folder_name
         self.parent = parent
-        self.needs_clean = needs_clean 
-        self.new_parent = new_parent 
-        self.needs_quality = needs_quality 
+        self.needs_clean = needs_clean
+        self.new_parent = new_parent
+        self.needs_quality = needs_quality
         self.result = result
         self.error = error
 
@@ -62,8 +62,7 @@ def validate_mkv(file):
     list_files.extend(mkv_parent.glob('*.jpg'))
     list_files.extend(mkv_parent.glob('*.nfo'))
     list_files.extend(mkv_parent.glob('*.srt'))
-    print('Files found: %d' % len(list_files))
-    needs_clean = len(list_files) > 0 
+    needs_clean = len(list_files) > 0
     movie_folder.needs_clean = needs_clean
     movie_folder.new_parent = not mkv_file.name == movie_folder.folder_name
     movie_folder.needs_quality = not '[' in mkv_file.name and not ']' in mkv_file.name
@@ -77,7 +76,7 @@ def clean_movie_folder(movie_folder):
     clean_files.extend(clean_folder.glob('*.nfo'))
     clean_files.extend(clean_folder.glob('*.srt'))
     for clean_file in clean_files:
-        print(clean_file.name)
+        clean_file.unlink()
 
     movie_folder.needs_clean = False
     return movie_folder
@@ -103,15 +102,18 @@ def main():
     if movie.needs_clean:
         if not movie.error:
             movie = clean_movie_folder(movie)
-            print('Cleanup:\t\tSuccess')
-        else:
-            print('Cleanup:\t\tFailed')
+            if movie.error:
+                print('Cleanup:\t\tFailed - %s' % movie.result)
+            else:
+                print('Cleanup:\t\tSuccess')
     else:
         print('Cleanup:\t\tSkipped')
 
-    print(movie)
-    output = 0
-    sys.exit(output)
+    if movie.error:
+        print('Failed\t\t%s' % movie.result)
+        sys.exit(1)
+    
+    sys.exit(0)
 
 
 if __name__ == '__main__':
