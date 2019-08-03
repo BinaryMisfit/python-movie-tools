@@ -41,35 +41,30 @@ def validate_mkv(file):
     mkv_file = Path(file)
     movie_folder = MovieFolder(mkv_file)
     if not mkv_file.exists():
-        movie_folder.result = "File not found"
+        movie_folder.result = "Failed - File not found"
         movie_folder.error = True
         return movie_folder
 
     if mkv_file.is_dir():
-        movie_folder.result = "MKV file not specified"
+        movie_folder.result = "Failed - Specify MKV File"
         movie_folder.error = True
         return movie_folder
 
-    print(mkv_file.suffix)
-    if not mkv_file.suffix == 'mkv':
-        movie_folder.result = "File is not a valid MKV"
+    if not mkv_file.suffix == '.mkv':
+        movie_folder.result = "Failed - Not a MKV file"
         movie_folder.error = True
         return movie_folder
 
     movie_folder.folder_name = mkv_file.parent.name
     movie_folder.parent = mkv_file.parent
     mkv_parent = Path(movie_folder.parent)
-    print('Exclude MKV')
-    for file in mkv_parent.glob('[!*.mkv]'):
-        print(file.name)
-
-    print('Include MKV')
-    for file in mkv_parent.iterdir():
-        print(file.name)
-
-    needs_clean = sum(1 for x in mkv_file.glob('*.jpg')) > 0
-    needs_clean = needs_clean or sum(1 for x in mkv_file.glob('*.nfo')) > 0
-    needs_clean = needs_clean or sum(1 for x in mkv_file.glob('*.srt')) > 0
+    list_files = []
+    list_files.extend(mkv_parent.glob('*.jpg'))
+    list_files.extend(mkv_parent.glob('*.nfo'))
+    list_files.extend(mkv_parent.glob('*.srt'))
+    print(list_files)
+    print(list_files.count)
+    needs_clean = list_files.count > 0 
     movie_folder.needs_clean = needs_clean
     movie_folder.new_parent = not mkv_file.name == movie_folder.folder_name
     movie_folder.needs_quality = not '[' in mkv_file.name and not ']' in mkv_file.name
@@ -78,7 +73,10 @@ def validate_mkv(file):
 
 def clean_movie_folder(movie_folder):
     clean_folder = Path(movie_folder.parent)
-    clean_files = clean_folder.glob('!*.mkv')
+    clean_files = []
+    clean_files.extend(clean_folder.glob('*.jpg'))
+    clean_files.extend(clean_folder.glob('*.nfo'))
+    clean_files.extend(clean_folder.glob('*.srt'))
     for clean_file in clean_files:
         print(clean_file.name)
 
