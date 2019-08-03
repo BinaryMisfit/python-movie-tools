@@ -1,4 +1,3 @@
-
 ##########################################################################
 # Movie Cleaner 
 # ###
@@ -7,6 +6,17 @@
 
 # Current Version: 0.0.1
 ##########################################################################
+
+
+class MovieFolder(object):
+    def __init__(self, mkv_file):
+        self.mkv_file = mkv_file
+
+    def __repr__(self):
+        return '<MovieFolder mkv_file: %s' % self.mkv_file
+
+    def __str__(self):
+        return repr(self)
 
 
 def main():
