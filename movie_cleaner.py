@@ -105,7 +105,7 @@ def main():
     if movie.error:
         print('Validation:\t\t%s' % movie.result)
     else:
-        print('Validation:\t\t%xSuccess' % Fore.GREEN)
+        print('Validation:\t\t%sSuccess' % Fore.GREEN)
 
     if movie.needs_clean:
         if not movie.error:
@@ -113,9 +113,9 @@ def main():
             if movie.error:
                 print('Cleanup:\t\t%sFailed - %s' % Fore.RED, movie.result)
             else:
-                print('Cleanup:\t\tSuccess')
+                print('Cleanup:\t\t%sSuccess' % Fore.GREEN)
     else:
-        print('Cleanup:\t\tSkipped')
+        print('Cleanup:\t\t%sSkipped' % Fore.YELLOW)
 
     if movie.needs_quality:
         if not movie.error:
@@ -123,9 +123,9 @@ def main():
             if movie.error:
                 print('Cleanup:\t\t%sFailed - %s' % Fore.RED, movie.result)
             else:
-                print('Cleanup:\t\tSuccess')
+                print('Cleanup:\t\t%sSuccess' % Fore.GREEN)
     else:
-        print('Cleanup:\t\tSkipped')
+        print('Cleanup:\t\t%sSkipped' % Fore.YELLOW)
 
     if movie.error:
         sys.exit(1)
