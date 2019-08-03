@@ -45,7 +45,13 @@ def validate_mkv(file):
         movie_folder.error = True
         return movie_folder
 
-    if not mkv_file.stem == 'mkv':
+    if mkv_file.is_dir():
+        movie_folder.result = "MKV file not specified"
+        movie_folder.error = True
+        return movie_folder
+
+    print(mkv_file.suffix)
+    if not mkv_file.suffix == 'mkv':
         movie_folder.result = "File is not a valid MKV"
         movie_folder.error = True
         return movie_folder
