@@ -97,7 +97,12 @@ def main():
     else:
         print('Validation:\t\tSuccess')
 
-    movie = clean_movie_folder(movie)
+    if not movie.error:
+        movie = clean_movie_folder(movie)
+        print('Cleanup:\t\tSuccess')
+    else:
+        print('Cleanup:\t\tFailed')
+
     print(movie)
     output = 0
     sys.exit(output)
