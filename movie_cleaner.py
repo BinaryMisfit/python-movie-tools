@@ -9,7 +9,7 @@
 # Current Version: 0.0.1
 ##########################################################################
 from pathlib import Path
-from colorama import init, Fore, Style
+from colorama import init, Fore
 
 
 class MovieFolder(object):
@@ -104,38 +104,30 @@ def main():
     print('MKV File\t\t%s' % args.file)
     movie = validate_mkv(args.file)
     if movie.error:
-        print('Validation:\t\t%s\r' % movie.result)
-        print(Style.RESET_ALL)
+        print('%sValidation:\t\t%s%s' % Fore.WHITE, movie.result, Fore.RED)
     else:
-        print('Validation:\t\t%sSuccess\r' % Fore.GREEN)
-        print(Style.RESET_ALL)
+        print('%sValidation:\t\t%sSuccess' % Fore.GREEN)
 
     if movie.needs_clean:
         if not movie.error:
             movie = clean_movie_folder(movie)
             if movie.error:
-                print('Cleanup:\t\t%sFailed - %s\r' % Fore.RED, movie.result)
-                print(Style.RESET_ALL)
+                print('%sCleanup:\t\t%sFailed - %s' % Fore.WHITE, Fore.RED, movie.result)
             else:
-                print('Cleanup:\t\t%sSuccess\r' % Fore.GREEN)
-                print(Style.RESET_ALL)
+                print('%sCleanup:\t\t%sSuccess' % Fore.WHITE, Fore.GREEN)
     else:
-        print('Cleanup:\t\t%sSkipped\r' % Fore.YELLOW)
-        print(Style.RESET_ALL)
+        print('%sCleanup:\t\t%sSkipped' % Fore.WHITE, Fore.YELLOW)
 
     if movie.needs_quality:
         if not movie.error:
             movie = add_quality(movie)
             if movie.error:
-                print('Quality:\t\t%sFailed - %s\r' %
-                      Fore.RED, movie.result)
-                print(Style.RESET_ALL)
+                print('%sQuality:\t\t%sFailed - %s' %
+                      Fore.WHITE, Fore.RED, movie.result)
             else:
-                print('Qaulity:\t\t%sSuccess\r' % Fore.GREEN)
-                print(Style.RESET_ALL)
+                print('%sQaulity:\t\t%sSuccess' % Fore.WHITE, Fore.GREEN)
     else:
-        print('Quality:\t\t%sSkipped\r' % Fore.YELLOW)
-        print(Style.RESET_ALL)
+        print('%sQuality:\t\t%sSkipped' % Fore.WHITE, Fore.YELLOW)
 
     if movie.error:
         sys.exit(1)
