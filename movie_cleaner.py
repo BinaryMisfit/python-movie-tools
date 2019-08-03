@@ -9,7 +9,7 @@
 # Current Version: 0.0.1
 ##########################################################################
 from pathlib import Path
-from colorama import init, Fore
+from colorama import init, Fore, Style
 
 
 class MovieFolder(object):
@@ -103,29 +103,29 @@ def main():
     print('MKV File\t\t%s' % args.file)
     movie = validate_mkv(args.file)
     if movie.error:
-        print('Validation:\t\t%s' % movie.result)
+        print('Validation:\t\t%sFailed - %s%s' % Fore.RED, movie.result, Style.RESET_ALL)
     else:
-        print('Validation:\t\t%sSuccess' % Fore.GREEN)
+        print('Validation:\t\t%sSuccess%s' % Fore.GREEN, Style.RESET_ALL)
 
     if movie.needs_clean:
         if not movie.error:
             movie = clean_movie_folder(movie)
             if movie.error:
-                print('Cleanup:\t\t%sFailed - %s' % Fore.RED, movie.result)
+                print('Cleanup:\t\t%sFailed - %s%s' % Fore.RED, movie.result, Style.RESET_ALL)
             else:
-                print('Cleanup:\t\t%sSuccess' % Fore.GREEN)
+                print('Cleanup:\t\t%sSuccess%s' % Fore.GREEN, Style.RESET_ALL)
     else:
-        print('Cleanup:\t\t%sSkipped' % Fore.YELLOW)
+        print('Cleanup:\t\t%sSkipped%s' % Fore.YELLOW, Style.RESET_ALL)
 
     if movie.needs_quality:
         if not movie.error:
             movie = add_quality(movie)            
             if movie.error:
-                print('Cleanup:\t\t%sFailed - %s' % Fore.RED, movie.result)
+                print('Cleanup:\t\t%sFailed - %s%s' % Fore.RED, movie.result, Style.RESET_ALL)
             else:
-                print('Cleanup:\t\t%sSuccess' % Fore.GREEN)
+                print('Cleanup:\t\t%sSuccess%s' % Fore.GREEN, Style.RESET_ALL)
     else:
-        print('Cleanup:\t\t%sSkipped' % Fore.YELLOW)
+        print('Cleanup:\t\t%sSkipped%s' % Fore.YELLOW, Style.RESET_ALL)
 
     if movie.error:
         sys.exit(1)
