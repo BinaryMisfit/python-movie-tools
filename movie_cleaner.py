@@ -104,37 +104,37 @@ def main():
     print('MKV File\t\t%s' % args.file)
     movie = validate_mkv(args.file)
     if movie.error:
-        print('Validation:\t\t%s' % movie.result)
+        print('Validation:\t\t%s\r' % movie.result)
         print(Style.RESET_ALL)
     else:
-        print('Validation:\t\t%sSuccess' % Fore.GREEN)
+        print('Validation:\t\t%sSuccess\r' % Fore.GREEN)
         print(Style.RESET_ALL)
 
     if movie.needs_clean:
         if not movie.error:
             movie = clean_movie_folder(movie)
             if movie.error:
-                print('Cleanup:\t\t%sFailed - %s' % Fore.RED, movie.result)
+                print('Cleanup:\t\t%sFailed - %s\r' % Fore.RED, movie.result)
                 print(Style.RESET_ALL)
             else:
-                print('Cleanup:\t\t%sSuccess' % Fore.GREEN)
+                print('Cleanup:\t\t%sSuccess\r' % Fore.GREEN)
                 print(Style.RESET_ALL)
     else:
-        print('Cleanup:\t\t%sSkipped' % Fore.YELLOW)
+        print('Cleanup:\t\t%sSkipped\r' % Fore.YELLOW)
         print(Style.RESET_ALL)
 
     if movie.needs_quality:
         if not movie.error:
             movie = add_quality(movie)
             if movie.error:
-                print('Cleanup:\t\t%sFailed - %s' %
+                print('Quality:\t\t%sFailed - %s\r' %
                       Fore.RED, movie.result)
                 print(Style.RESET_ALL)
             else:
-                print('Cleanup:\t\t%sSuccess' % Fore.GREEN)
+                print('Qaulity:\t\t%sSuccess\r' % Fore.GREEN)
                 print(Style.RESET_ALL)
     else:
-        print('Cleanup:\t\t%sSkipped' % Fore.YELLOW)
+        print('Quality:\t\t%sSkipped\r' % Fore.YELLOW)
         print(Style.RESET_ALL)
 
     if movie.error:
