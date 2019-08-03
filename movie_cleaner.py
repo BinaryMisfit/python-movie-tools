@@ -32,7 +32,7 @@ class MovieFolder(object):
     def __repr__(self):
         return '<MovieFolder mkv_file: %s, orignal_name: %s, new_name: %s, folder_name: %s, ' \
             'parent: %s, needs_clean: %r, new_parent: %r, needs_quality: %r, result: %s, ' \
-            ' error: %r>' % (self.mkv_file, self.folder_name, self.orignal_name, self.new_name,
+            ' error: %r>' % (self.mkv_file, self.orignal_name, self.new_name, self.folder_name, 
                              self.parent, self.needs_clean, self.new_parent, self.needs_quality,
                              self.result, self.error)
 
@@ -83,7 +83,7 @@ def get_video_quality(movie_folder):
 
 def add_quality(movie_folder):
     movie_folder = get_video_quality(movie_folder)
-    movie_folder.new_name = '%s %s.%s' % (
+    movie_folder.new_name = '%s [%s]%s' % (
         movie_folder.mkv_file.name, movie_folder.quality, movie_folder.mkv_file.suffix)
     movie_folder.needs_quality = False
     return movie_folder
