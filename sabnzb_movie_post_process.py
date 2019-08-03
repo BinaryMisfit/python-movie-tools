@@ -92,6 +92,7 @@ def find_valid_video_track(file_data):
     if hasattr(file_data, 'video_tracks'):
         for video_track in file_data.video_tracks:
             print('Video Track: #%d' % video_track.number)
+            print(video_track)
             if hasattr(video_track, 'language'):
                 print('Video: %s' % video_track.language)
                 if video_track.language == 'English':
@@ -114,6 +115,7 @@ def find_valid_audio_track(file_data):
     if hasattr(file_data, 'audio_tracks'):
         for audio_track in file_data.audio_tracks:
             print('Audio Track: #%d' % audio_track.number)
+            print(audio_track)
             if hasattr(audio_track, 'channels'):
                 print('Channels: %d' % audio_track.channels)
                 if audio_track.channels in [6, 8]:
@@ -142,12 +144,6 @@ def validate_conversion(file_data):
     if use_audio_track is None:
         if use_audio_track is None:
             return SABResult(False, error='No valid audio track')
-
-    if int(use_video_track) == 0:
-        return SABResult(False, error='No valid video track')
-
-    if int(use_audio_track) == 0:
-        return SABResult(False, error='No valid audio track')
 
     convert = len(file_data.video_tracks) != 1
     convert = convert or len(file_data.audio_tracks) != 1

@@ -84,7 +84,9 @@ def add_quality(movie_folder):
 
     movie_folder.new_name = '%s [%s]%s' % (
         movie_folder.mkv_file.stem, movie_folder.quality, movie_folder.mkv_file.suffix)
-    movie_folder.mkv_file.rename(movie_folder.new_name)
+    movie_update = Path(movie_folder.parent)    
+    movie_update = movie_update.joinpath(movie_folder.new_name)
+    print(movie_update.as_posix)
     movie_folder.needs_quality = False
     return movie_folder
 
