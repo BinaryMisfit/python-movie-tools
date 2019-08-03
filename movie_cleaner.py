@@ -83,7 +83,7 @@ def add_quality(movie_folder):
         return movie_folder
 
     movie_folder.new_name = '%s [%s]%s' % (
-        movie_folder.mkv_file.name, movie_folder.quality, movie_folder.mkv_file.suffix)
+        movie_folder.mkv_file.stem, movie_folder.quality, movie_folder.mkv_file.suffix)
     movie_folder.needs_quality = False
     return movie_folder
 
@@ -138,10 +138,9 @@ def main():
     print('MKV File\t\t%s' % args.file)
     movie = validate_mkv(args.file)
     if movie.error:
-        print('Validation:\t\t%s%s' %
-              colored('Failed - ', 'red'), colored(movie.result, 'red'))
+        print('Validation:\t\t{0}{1}', colored('Failed - ', 'red'), colored(movie.result, 'red'))
     else:
-        print('Validation:\t\t%s' % colored('Success', 'green'))
+        print('Validation:\t\t{0}', colored('Success', 'green'))
 
     if movie.needs_clean:
         if not movie.error:

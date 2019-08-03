@@ -93,7 +93,7 @@ def find_valid_video_track(file_data):
         for video_track in file_data.video_tracks:
             print('Video Track: #%d' % video_track.number)
             if hasattr(video_track, 'language'):
-                print('Video: %s', % video_track.language)
+                print('Video: %s' % video_track.language)
                 if video_track.language == 'English':
                     return video_track.number - 1
 
