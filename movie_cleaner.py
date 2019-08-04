@@ -59,7 +59,7 @@ def validate_mkv(file):
         movie_folder.error = True
         return movie_folder
 
-    movie_folder.org_name = mkv_file.name
+    movie_folder.org_name = mkv_file.stem
     movie_folder.folder_name = mkv_file.parent.name
     movie_folder.parent = mkv_file.parent
     mkv_parent = Path(movie_folder.parent)
@@ -133,11 +133,8 @@ def add_quality(movie_folder):
 
 
 def rename_parent(movie_folder):
-    print(movie_folder)
     movie_update = Path(movie_folder.parent)
     movie_update = movie_update.parent
-    print(str(movie_update))
-    print(movie_folder.org_name)
     movie_update = movie_update.joinpath(movie_folder.org_name)
     print(str(movie_update))
     movie_folder.new_parent = False
