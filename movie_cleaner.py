@@ -133,7 +133,8 @@ def add_quality(movie_folder):
 
 
 def rename_parent(movie_folder):
-    movie_update = Path(movie_folder.parent.parent)
+    print(movie_folder)
+    movie_update = Path(movie_folder.parent).parent
     print(str(movie_update))
     movie_update = movie_update.joinpath(movie_folder.org_name)
     print(str(movie_update))
