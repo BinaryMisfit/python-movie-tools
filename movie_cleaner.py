@@ -134,13 +134,13 @@ def add_quality(movie_folder):
 
 
 def rename_parent(movie_folder):
+    import sys
     movie_rename = Path(movie_folder.parent)
     movie_update = movie_rename.parent
     movie_update = movie_update.joinpath(movie_folder.org_name)
-    print(movie_rename)
-    print(movie_update)
     try:
-        #movie_folder.mkv_file.rename(movie_update)
+        movie_rename.rename(movie_update)
+        movie_folder.parent = movie_update
         movie_folder.new_parent = False
     except:
         movie_folder.error = True
