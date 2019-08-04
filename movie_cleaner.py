@@ -30,9 +30,9 @@ class MovieFolder(object):
         self.error = error
 
     def __repr__(self):
-        return '<MovieFolder mkv_file: {0}, orignal_name: {1}, new_name: {2}, folder_name: {3}, ' \
+        return '<MovieFolder mkv_file: {0}, org_name: {1}, new_name: {2}, folder_name: {3}, ' \
             'parent: {4}, needs_clean: {5}, new_parent: {6}, needs_quality: {7}, result: {8}, ' \
-            ' error: {9}>'.format(self.mkv_file, self.orignal_name, self.new_name, self.folder_name,
+            ' error: {9}>'.format(self.mkv_file, self.org_name, self.new_name, self.folder_name,
                                   self.parent, self.needs_clean, self.new_parent, self.needs_quality,
                                   self.result, self.error)
 
@@ -59,7 +59,7 @@ def validate_mkv(file):
         movie_folder.error = True
         return movie_folder
 
-    movie_folder.orignal_name = mkv_file.name
+    movie_folder.org_name = mkv_file.name
     movie_folder.folder_name = mkv_file.parent.name
     movie_folder.parent = mkv_file.parent
     mkv_parent = Path(movie_folder.parent)
