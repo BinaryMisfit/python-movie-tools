@@ -199,7 +199,7 @@ def create_output_file(source_file, output_file, video_track, audio_track):
 
 def validate_output_file(source_file):
     """Validate the MKV file contains required tracks"""
-    mkv_file = read_mkv_file(source_file)
+    mkv_file = read_mkv_file(str(source_file))
     if not mkv_file.result:
         return SABResult(False, error='Error reading MKV file')
 
