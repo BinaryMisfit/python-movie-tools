@@ -64,7 +64,6 @@ def read_mkv_file(file):
     with open(file, 'rb') as mkv_source:
         try:
             mkv_file = enzyme.MKV(mkv_source)
-            print(mkv_file)
         except MalformedMKVError:
             return SABResult(False, error='[ERROR] {0}'.format(sys.exc_info()[0]))
 
@@ -75,7 +74,6 @@ def find_valid_video_track(file_data):
     """Check if the video tracks for the file contains a valid track"""
     if hasattr(file_data, 'video_tracks'):
         for video_track in file_data.video_tracks:
-            print(video_track)
             if hasattr(video_track, 'language'):
                 if video_track.language == 'English':
                     return video_track.number - 1
@@ -96,7 +94,6 @@ def find_valid_audio_track(file_data):
     """Check if the audio tracks for the file contains a valid track"""
     if hasattr(file_data, 'audio_tracks'):
         for audio_track in file_data.audio_tracks:
-            print(audio_track)
             if hasattr(audio_track, 'channels'):
                 if audio_track.channels in [6, 8]:
                     if hasattr(audio_track, 'language'):
@@ -181,7 +178,6 @@ def create_output_file(source_file, output_file, video_track, audio_track):
         command = '{0} -o \"{1}\" --track-order 0:{2},0:{3} --video-tracks {2} --audio-tracks {3} ' \
             '--no-subtitles --no-chapters \"{4}\"'.format(executable, output_file, video_track,
                                                           audio_track, source_file)
-        print(command)
         output = run(command)
         result_code = output.return_code
         result_content = output.out
