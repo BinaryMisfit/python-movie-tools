@@ -69,7 +69,7 @@ def validate_mkv(file):
     list_files.extend(mkv_parent.glob('*.srt'))
     needs_clean = len(list_files) > 0
     movie_folder.needs_clean = needs_clean
-    movie_folder.new_parent = mkv_file.name.startswith(movie_folder.folder_name)
+    movie_folder.new_parent = not mkv_file.name.startswith(movie_folder.folder_name)
     movie_folder.needs_quality = not '[' in mkv_file.name and not ']' in mkv_file.name  
     return movie_folder
 
@@ -188,12 +188,12 @@ def main():
         if not movie.error:
             movie = rename_parent(movie)
             if movie.error:
-                print('Rename:\t\t{0}{1}'.format(
+                print('Rename:\t\t\t{0}{1}'.format(
                       colored('Failed - ', 'red'), colored(movie.result, 'red')))
             else:
-                print('Rename:\t\t{0}'.format(colored('Success', 'green')))
+                print('Rename:\t\t\t{0}'.format(colored('Success', 'green')))
     else:
-        print('Rename:\t\t{0}'.format(colored('Skipped', 'yellow')))
+        print('Rename:\t\t\t{0}'.format(colored('Skipped', 'yellow')))
 
     print(movie)
     if movie.error:
