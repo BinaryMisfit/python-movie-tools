@@ -147,7 +147,13 @@ def validate_mkv_file(file):
         return SABResult(False, error='File not found')
 
     validate_success = validate_conversion(str(file))
-    return validate_success
+    if validate_success.result:
+        if not validate_success.convert:
+            return SABResult(True, data=file, convert=False)
+
+        return SABResult(True, data=file, convert=True, video_track=validate_success.video_track, audio_track=validate_success.audio_track)
+
+    return SABResult(False, error=validate_success.error)
 
 
 def backup_original_file(folder, file):
