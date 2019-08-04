@@ -69,8 +69,9 @@ def validate_mkv(file):
     list_files.extend(mkv_parent.glob('*.srt'))
     needs_clean = len(list_files) > 0
     movie_folder.needs_clean = needs_clean
-    movie_folder.new_parent = not mkv_file.name.startswith(movie_folder.folder_name)
-    movie_folder.needs_quality = not '[' in mkv_file.name and not ']' in mkv_file.name  
+    movie_folder.new_parent = not mkv_file.name.startswith(
+        movie_folder.folder_name)
+    movie_folder.needs_quality = not '[' in mkv_file.name and not ']' in mkv_file.name
     return movie_folder
 
 
@@ -133,11 +134,18 @@ def add_quality(movie_folder):
 
 
 def rename_parent(movie_folder):
-    movie_update = Path(movie_folder.parent)
-    movie_update = movie_update.parent
+    movie_rename = Path(movie_folder.parent)
+    movie_update = movie_rename.parent
     movie_update = movie_update.joinpath(movie_folder.org_name)
-    print(str(movie_update))
-    movie_folder.new_parent = False
+    print(movie_rename)
+    print(movie_update)
+    try:
+        #movie_folder.mkv_file.rename(movie_update)
+        movie_folder.new_parent = False
+    except:
+        movie_folder.error = True
+        movie_folder.result = sys.exc_info()[0]
+
     return movie_folder
 
 
@@ -148,7 +156,6 @@ def main():
     import sys
     import argparse
     init()
-    print 'Starting Movie Renamer'
     parser = argparse.ArgumentParser(
         description='Clean a MKV file name and all relevant files and tags')
     parser.add_argument('file', metavar='file', type=str,
@@ -162,6 +169,7 @@ def main():
     else:
         print('Validation:\t\t{0}'.format(colored('Success', 'green')))
 
+    print(movie)
     if movie.needs_clean:
         if not movie.error:
             movie = clean_movie_folder(movie)
