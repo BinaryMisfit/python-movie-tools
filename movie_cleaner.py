@@ -14,8 +14,9 @@ from pathlib import Path
 class MovieFolder(object):
     """Object containing all information for the script"""
 
-    def __init__(self, mkv_file, org_name=None, new_name=None, folder_name=None,
-                 parent=None, quality=None, needs_clean=False, new_parent=False,
+    def __init__(self, mkv_file, org_name=None, new_name=None,
+                 folder_name=None, parent=None, quality=None,
+                 needs_clean=False, new_parent=False,
                  needs_quality=False, result='', error=False):
         self.mkv_file = mkv_file
         self.org_name = org_name
@@ -30,11 +31,14 @@ class MovieFolder(object):
         self.error = error
 
     def __repr__(self):
-        return '<MovieFolder mkv_file: {0}, org_name: {1}, new_name: {2}, folder_name: {3}, ' \
-            'parent: {4}, needs_clean: {5}, new_parent: {6}, needs_quality: {7}, result: {8}, ' \
-            ' error: {9}>'.format(self.mkv_file, self.org_name, self.new_name, self.folder_name,
-                                  self.parent, self.needs_clean, self.new_parent, self.needs_quality,
-                                  self.result, self.error)
+        return '<MovieFolder mkv_file: {0}, org_name: {1}, ' \
+            'new_name: {2}, folder_name: {3}, parent: {4}, ' \
+            'needs_clean: {5}, new_parent: {6} ' \
+            ', needs_quality: {7}, result: {8}, ' \
+            ' error: {9}>'.format(self.mkv_file, self.org_name, self.new_name,
+                                  self.folder_name, self.parent,
+                                  self.needs_clean, self.new_parent,
+                                  self.needs_quality, self.result, self.error)
 
     def __str__(self):
         return repr(self)
@@ -71,7 +75,8 @@ def validate_mkv(file):
     movie_folder.needs_clean = needs_clean
     movie_folder.new_parent = not mkv_file.name.startswith(
         movie_folder.folder_name)
-    movie_folder.needs_quality = not '[' in mkv_file.name and not ']' in mkv_file.name
+    needs_quality = '[' not in mkv_file.name and ']' not in mkv_file.name
+    movie_folder.needs_quality = needs_quality
     return movie_folder
 
 
@@ -119,14 +124,15 @@ def add_quality(movie_folder):
         return movie_folder
 
     movie_folder.new_name = '{0} [{1}]{2}'.format(
-        movie_folder.mkv_file.stem, movie_folder.quality, movie_folder.mkv_file.suffix)
+        movie_folder.mkv_file.stem, movie_folder.quality,
+        movie_folder.mkv_file.suffix)
     movie_update = Path(movie_folder.parent)
     movie_update = movie_update.joinpath(movie_folder.new_name)
     try:
         movie_folder.mkv_file.rename(movie_update)
         movie_folder.mkv_file = movie_update
         movie_folder.needs_quality = False
-    except:
+    except IOError:
         movie_folder.error = True
         movie_folder.result = sys.exc_info()[0]
 
@@ -142,7 +148,7 @@ def rename_parent(movie_folder):
         movie_rename.rename(movie_update)
         movie_folder.parent = movie_update
         movie_folder.new_parent = False
-    except:
+    except IOError:
         movie_folder.error = True
         movie_folder.result = sys.exc_info()[0]
 
@@ -174,7 +180,8 @@ def main():
             movie = clean_movie_folder(movie)
             if movie.error:
                 print('Cleanup:\t\t{0}{1}'.format(
-                      colored('Failed - ', 'red'), colored(movie.result, 'red')))
+                      colored('Failed - ', 'red'),
+                      colored(movie.result, 'red')))
             else:
                 print('Cleanup:\t\t{0}'.format(colored('Success', 'green')))
     else:
@@ -185,7 +192,8 @@ def main():
             movie = add_quality(movie)
             if movie.error:
                 print('Quality:\t\t{0}{1}'.format(
-                      colored('Failed - ', 'red'), colored(movie.result, 'red')))
+                      colored('Failed - ', 'red'),
+                      colored(movie.result, 'red')))
             else:
                 print('Quality:\t\t{0}'.format(colored('Success', 'green')))
     else:
@@ -196,7 +204,8 @@ def main():
             movie = rename_parent(movie)
             if movie.error:
                 print('Rename:\t\t\t{0}{1}'.format(
-                      colored('Failed - ', 'red'), colored(movie.result, 'red')))
+                      colored('Failed - ', 'red'),
+                      colored(movie.result, 'red')))
             else:
                 print('Rename:\t\t\t{0}'.format(colored('Success', 'green')))
     else:
