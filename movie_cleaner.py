@@ -169,7 +169,6 @@ def main():
     else:
         print('Validation:\t\t{0}'.format(colored('Success', 'green')))
 
-    print(movie)
     if movie.needs_clean:
         if not movie.error:
             movie = clean_movie_folder(movie)
@@ -203,7 +202,6 @@ def main():
     else:
         print('Rename:\t\t\t{0}'.format(colored('Skipped', 'yellow')))
 
-    print(movie)
     if movie.error:
         sys.exit(1)
 
