@@ -275,6 +275,7 @@ def main():
     """Convert MKV if required"""
     if validate_mkv_result.result:
         if validate_mkv_result.convert:
+            print(validate_mkv_result)
             convert_result = convert_mkv_file(
                 sab_directory, validate_mkv_result.data, validate_mkv_result.video_track, validate_files_result.audio_track)
             script_success = convert_result
