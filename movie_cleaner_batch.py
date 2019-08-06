@@ -50,9 +50,9 @@ def process(folder):
                   "===============================================",
                   "=====================",
                   'blue'))
-    print('Processing:\t\t{0}').format(get_file.data.name)
     for batch_child in batch_folder.iterdir():
         process_file = True
+        print('Processing:\t\t{0}').format(batch_child.name)
         get_file = get_first_file(str(batch_child), '*.mkv')
         if not get_file.result:
             process_file = False
