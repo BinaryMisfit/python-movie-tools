@@ -51,11 +51,12 @@ def process(folder):
         print(colored("==================================================",
                       'blue'))
         get_file = get_first_file(str(batch_child), '*.mkv')
+
         if not get_file.result:
             process_file = False
 
         if process_file:
-            print('Processing:\t\t{0}').format(batch.folder_name)
+            print('Processing:\t\t{0}').format(get_file.data.name)
             result = process_folder(str(get_file.data))
             print(colored("==================================================",
                           'blue'))
