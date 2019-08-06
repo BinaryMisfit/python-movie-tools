@@ -111,6 +111,8 @@ def get_video_quality(movie_folder):
                     return_quality = "Bluray-" + return_quality
                 else:
                     return_quality = "HDTV-" + return_quality
+            else:
+                return_quality = "DVD"
     movie_folder.quality = return_quality
     return movie_folder
 
@@ -155,20 +157,10 @@ def rename_parent(movie_folder):
     return movie_folder
 
 
-def main():
-    """Main entry point for script"""
-    from colorama import init
+def process_folder(folder)
     from termcolor import colored
-    import sys
-    import argparse
-    init()
-    parser = argparse.ArgumentParser(
-        description='Clean a MKV file name and all relevant files and tags')
-    parser.add_argument('file', metavar='file', type=str,
-                        help='MKV file to clean')
-    args = parser.parse_args()
-    print('MKV File\t\t{0}'.format(args.file))
-    movie = validate_mkv(args.file)
+    print('MKV File\t\t{0}'.format(folder))
+    movie = validate_mkv(folder)
     if movie.error:
         print('Validation:\t\t{0}{1}'.format(
             colored('Failed - ', 'red'), colored(movie.result, 'red')))
@@ -211,11 +203,25 @@ def main():
     else:
         print('Rename:\t\t\t{0}'.format(colored('Skipped', 'yellow')))
 
+    return movie
+
+
+def main():
+    """Main entry point for script"""
+    from colorama import init
+    import sys
+    import argparse
+    init()
+    parser = argparse.ArgumentParser(
+        description='Clean a MKV file name and all relevant files and tags')
+    parser.add_argument('file', metavar='file', type=str,
+                        help='MKV file to clean')
+    args = parser.parse_args()
+    movie = process_folder(args.file)
     if movie.error:
         sys.exit(1)
 
     sys.exit(0)
-
 
 if __name__ == '__main__':
     main()
