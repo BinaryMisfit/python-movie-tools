@@ -157,7 +157,7 @@ def rename_parent(movie_folder):
     return movie_folder
 
 
-def process_folder(folder)
+def process_folder(folder):
     from termcolor import colored
     print('MKV File\t\t{0}'.format(folder))
     movie = validate_mkv(folder)
