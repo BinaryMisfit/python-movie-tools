@@ -58,7 +58,7 @@ def process(folder):
             print('Processing:\t\t{0}').format(batch.folder_name)
             result = process_folder(str(batch_child))
             print(colored("==================================================",
-                        'blue'))
+                          'blue'))
             if result.error:
                 batch.error = result.error
                 batch.result = ("Failed - {0}").format(batch_child.name)

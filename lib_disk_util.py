@@ -55,7 +55,7 @@ def get_first_file(target_folder, target_extension):
     if files is None:
         return DiskResult(False, error='No file found')
 
-    for get_file in files.interdir():
+    for get_file in files.iterdir():
         return DiskResult(True, data=get_file)
 
 
