@@ -48,8 +48,7 @@ def process(folder):
     print('Checking:\t\t{0}').format(batch.folder_name)
     print(colored("==============================================="
                   "===============================================",
-                  "=====================",
-                  'blue'))
+                  "=====================", 'blue'))
     for batch_child in batch_folder.iterdir():
         process_file = True
         print('Processing:\t\t{0}').format(batch_child.name)
@@ -61,8 +60,7 @@ def process(folder):
             result = process_folder(str(get_file.data))
             print(colored("==============================================="
                           "===============================================",
-                          "=====================",
-                          'blue'))
+                          "=====================", 'blue'))
             if result.error:
                 batch.error = result.error
                 batch.result = ("Failed - {0}").format(batch_child.name)
