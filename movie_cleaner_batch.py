@@ -32,6 +32,7 @@ class BatchFolder(object):
 def process(folder):
     """Process and iterate through the specified folder"""
     from termcolor import colored
+    from lib_disk_util import get_first_file
     batch = BatchFolder(folder)
     batch_folder = Path(batch.folder_name)
     if not batch_folder.exists():
@@ -46,17 +47,21 @@ def process(folder):
 
     print('Checking:\t\t{0}').format(batch.folder_name)
     for batch_child in batch_folder.iterdir():
+        process_file = True
         print(colored("==================================================",
                       'blue'))
-        print('Processing:\t\t{0}').format(batch.folder_name)
-        result = process_folder(str(batch_child))
-        if result.error:
-            batch.error = result.error
-            batch.result = ("Failed - {0}").format(batch_child.name)
-            break
+        get_file = get_first_file(str(batch_child), '*.mkv')
+        if not get_file.result:
+            process_file = False
 
-        print(colored("==================================================",
-                      'blue'))
+        if process_file:
+            print('Processing:\t\t{0}').format(batch.folder_name)
+            result = process_folder(str(batch_child))
+            print(colored("==================================================",
+                        'blue'))
+            if result.error:
+                batch.error = result.error
+                batch.result = ("Failed - {0}").format(batch_child.name)
 
     return batch
 
