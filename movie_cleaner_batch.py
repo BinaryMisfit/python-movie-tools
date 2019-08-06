@@ -46,10 +46,11 @@ def process(folder):
         return batch
 
     print('Checking:\t\t{0}').format(batch.folder_name)
+    print(colored("==============================================="
+                  "===============================================",
+                  'blue'))
     for batch_child in batch_folder.iterdir():
         process_file = True
-        print(colored("==================================================",
-                      'blue'))
         get_file = get_first_file(str(batch_child), '*.mkv')
 
         if not get_file.result:
@@ -58,7 +59,8 @@ def process(folder):
         if process_file:
             print('Processing:\t\t{0}').format(get_file.data.name)
             result = process_folder(str(get_file.data))
-            print(colored("==================================================",
+            print(colored("==============================================="
+                          "===============================================",
                           'blue'))
             if result.error:
                 batch.error = result.error
