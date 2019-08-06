@@ -48,11 +48,15 @@ def process(folder):
     print('Checking:\t\t{0}').format(batch.folder_name)
     for batch_child in batch_folder.iterdir():
         process_file = True
-        print('---')
-        print('Processing:\t\t{0}').format(batch_child.name)
-        get_file = get_first_file(str(batch_child), '*.mkv')
-        if not get_file.result:
+        if not batch_child.is_dir():
             process_file = False
+
+        if process_file:
+            print('---')
+            print('Processing:\t\t{0}').format(batch_child.name)
+            get_file = get_first_file(str(batch_child), '*.mkv')
+            if not get_file.result:
+                process_file = False
 
         if process_file:
             result = process_folder(str(get_file.data))
