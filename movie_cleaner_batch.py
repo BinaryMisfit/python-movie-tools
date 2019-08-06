@@ -44,10 +44,10 @@ def process(folder):
         batch.result = 'Not a folder'
         return batch
 
-    print('Checking:\t\t{0}', batch.folder_name)
-    print(colored("=================================", 'blue'))
-    print('Processing:\t\t{0}', batch.folder_name)
-    print(colored("=================================", 'blue'))
+    print('Checking:\t\t{0}').format(batch.folder_name)
+    print(colored("=======================================================", 'blue'))
+    print('Processing:\t\t{0}').format(batch.folder_name)
+    print(colored("=====================----------------------============", 'blue'))
     return batch
 
 
