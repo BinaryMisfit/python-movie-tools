@@ -56,7 +56,7 @@ def process(folder):
 
         if process_file:
             print('Processing:\t\t{0}').format(batch.folder_name)
-            result = process_folder(str(batch_child))
+            result = process_folder(str(get_file.data))
             print(colored("==================================================",
                           'blue'))
             if result.error:
