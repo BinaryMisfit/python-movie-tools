@@ -36,10 +36,10 @@ def check_movie(movie_list, movie):
     mkv_files = []
     mkv_files = mkv_files.extend(movie.glob('*.mkv'))
     has_movie = mkv_files is not None and len(mkv_files) > 0
-    movie_info = next((x for x in movie_list if x['folderPath'] == str(movie)),
-                      None)
     movie_info = find_movie(movie_list, str(movie))
-    print(movie_info)
+    if movie_info is not None:
+        print(movie_info)
+
     if has_movie:
         return 1
     return 0
