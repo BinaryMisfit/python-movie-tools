@@ -38,7 +38,9 @@ def check_movie(movie_list, movie):
     has_movie = mkv_files is not None and len(mkv_files) > 0
     movie_info = find_movie(movie_list, str(movie))
     if movie_info is not None:
-        print(movie_info)
+        print(movie_info["downloaded"])
+    else:
+        print("Movie Not Found")
 
     if has_movie:
         return 1
@@ -58,7 +60,7 @@ def main():
         if movie_folder.is_dir():
             for movie in movie_folder.iterdir():
                 if movie.is_dir():
-                    movie_count += check_movie(movie_list, movie)
+                    movie_count += int(check_movie(movie_list, movie))
 
     print(("Total movies found: {0}").format(movie_count))
     sys.exit(0)
