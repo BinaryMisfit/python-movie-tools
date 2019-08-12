@@ -101,7 +101,7 @@ def get_video_quality(movie_folder):
         if track.track_type == "Video":
             if int(track.sampled_width) == 1920:
                 return_quality = "1080p"
-                if int(track.sampled_height) >= 1000:
+                if int(track.sampled_height) >= 800:
                     return_quality = "Bluray-" + return_quality
                 else:
                     return_quality = "HDTV-" + return_quality
