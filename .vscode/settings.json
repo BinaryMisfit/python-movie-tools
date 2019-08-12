@@ -2,7 +2,7 @@
     "workbench.colorCustomizations": {
         "tab.unfocusedActiveBorder": "#fff0"
     },
-    "python.pythonPath": "C:\\Python27\\python.exe",
+    "python.pythonPath": "C:\\Program Files\\Python37\\python.exe",
     "python.linting.pylintEnabled": false,
     "python.linting.enabled": true,
     "python.linting.flake8Enabled": true

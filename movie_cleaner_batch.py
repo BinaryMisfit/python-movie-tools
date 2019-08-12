@@ -14,7 +14,6 @@ from pathlib import Path
 
 class BatchFolder(object):
     """Object containing all information for the script"""
-
     def __init__(self, folder_name, result='', error=False):
         self.folder_name = folder_name
         self.result = result
@@ -31,7 +30,6 @@ class BatchFolder(object):
 
 def process(folder):
     """Process and iterate through the specified folder"""
-    from termcolor import colored
     from lib_disk_util import get_first_file
     batch = BatchFolder(folder)
     batch_folder = Path(batch.folder_name)
@@ -76,7 +74,9 @@ def main():
     init()
     parser = argparse.ArgumentParser(
         description='Clean all movies stored in specified folder')
-    parser.add_argument('folder', metavar='folder', type=str,
+    parser.add_argument('folder',
+                        metavar='folder',
+                        type=str,
                         help='Folder to check')
     args = parser.parse_args()
     movie = process(args.folder)
