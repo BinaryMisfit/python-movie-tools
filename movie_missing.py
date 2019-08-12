@@ -41,8 +41,9 @@ def main():
         if movie_folder.is_dir():
             for movie in movie_folder.iterdir():
                 if movie.is_dir():
-                    movie_file = movie_folder.glob('*.mkv')
-                    has_movie = len(movie_file) > 0
+                    movie_files = []
+                    movie_files = movie_files.extend(movie_folder.glob('*.mkv'))
+                    has_movie = len(movie_files) > 0
                     if has_movie:
                         movie_count += 1
                     print(str(movie))
