@@ -39,7 +39,7 @@ def main():
         if movie_folder.is_dir:
             for movie in movie_folder.iterdir():
                 if movie.is_dir:
-                    movie += 1
+                    movie_count += 1
                     if str(movie) not in movie_list:
                         print(str(movie))
 
