@@ -61,6 +61,7 @@ def process(folder):
             if result.error:
                 batch.error = result.error
                 batch.result = ("Failed - {0}").format(batch_child.name)
+                break
 
     return batch
 

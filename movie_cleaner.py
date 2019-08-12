@@ -66,6 +66,7 @@ def validate_mkv(file):
     movie_folder.org_name = mkv_file.stem
     movie_folder.folder_name = mkv_file.parent.name
     movie_folder.parent = mkv_file.parent
+    movie_folder = get_video_quality(movie_folder)
     mkv_parent = Path(movie_folder.parent)
     list_files = []
     list_files.extend(mkv_parent.glob('*.jpg'))
@@ -73,9 +74,10 @@ def validate_mkv(file):
     list_files.extend(mkv_parent.glob('*.srt'))
     needs_clean = len(list_files) > 0
     movie_folder.needs_clean = needs_clean
-    movie_folder.new_parent = not mkv_file.name.startswith(
-        movie_folder.folder_name)
-    needs_quality = '[' not in mkv_file.name and ']' not in mkv_file.name
+    has_quality = '[' in movie_folder.folder_name and ']' in movie_folder.folder_name
+    match_name = not mkv_file.name.startswith(movie_folder.folder_name)
+    movie_folder.new_parent = has_quality or match_name
+    needs_quality = movie_folder.quality not in mkv_file.name
     movie_folder.needs_quality = needs_quality
     return movie_folder
 
@@ -107,12 +109,15 @@ def get_video_quality(movie_folder):
                     return_quality = "HDTV-" + return_quality
             elif int(track.sampled_width) == 1280:
                 return_quality = "720p"
-                if int(track.sampled_height) >= 800:
+                if int(track.sampled_height) >= 500:
                     return_quality = "Bluray-" + return_quality
-                else:
-                    return_quality = "HDTV-" + return_quality
-            else:
-                return_quality = "DVD"
+#                else:
+#                    return_quality = "HDTV-" + return_quality
+            elif int(track.sampled_height) == 1080:
+                return_quality = "Bluray-1080p"
+            elif int(track.sampled_width) >= 1000:
+                if int(track.sampled_height) >= 800:
+                    return_quality = "Bluray-1080p"
     movie_folder.quality = return_quality
     return movie_folder
 
@@ -125,8 +130,13 @@ def add_quality(movie_folder):
         movie_folder.result = 'Unknown Movie Quality'
         return movie_folder
 
+    movie_name = movie_folder.mkv_file.stem
+    has_quality = '[' in movie_name and ']' in movie_name
+    if has_quality:
+        movie_name = movie_name[0:movie_name.index('[') - 1].strip()
+
     movie_folder.new_name = '{0} [{1}]{2}'.format(
-        movie_folder.mkv_file.stem, movie_folder.quality,
+        movie_name, movie_folder.quality,
         movie_folder.mkv_file.suffix)
     movie_update = Path(movie_folder.parent)
     movie_update = movie_update.joinpath(movie_folder.new_name)
@@ -143,9 +153,14 @@ def add_quality(movie_folder):
 
 def rename_parent(movie_folder):
     import sys
+    movie_name = movie_folder.org_name
+    has_quality = '[' in movie_name and ']' in movie_name
+    if has_quality:
+        movie_name = movie_name[0:movie_name.index('[') - 1].strip()
+
     movie_rename = Path(movie_folder.parent)
     movie_update = movie_rename.parent
-    movie_update = movie_update.joinpath(movie_folder.org_name)
+    movie_update = movie_update.joinpath(movie_name)
     try:
         movie_rename.rename(movie_update)
         movie_folder.parent = movie_update
@@ -161,6 +176,8 @@ def process_folder(folder):
     from termcolor import colored
     print('MKV File\t\t{0}'.format(folder))
     movie = validate_mkv(folder)
+    if movie.quality is not None:
+        print('Quality:\t\t{0}'.format(movie.quality))
     if movie.error:
         print('Validation:\t\t{0}{1}'.format(
             colored('Failed - ', 'red'), colored(movie.result, 'red')))
