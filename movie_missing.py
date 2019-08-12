@@ -32,14 +32,15 @@ def find_movie(movie_list, path):
 
 
 def check_movie(movie_list, movie):
-    print(str(movie))
     mkv_files = movie.glob('*.mkv')
     has_movie = mkv_files is not None
     movie_info = find_movie(movie_list, str(movie))
     if movie_info is not None:
         if not movie_info["downloaded"]:
+            print(str(movie))
             print(('Movie Found: {0}').format(has_movie))
     else:
+        print(str(movie))
         print(('Movie Found: {0}. Not in Radarr').format(has_movie))
 
     if has_movie:
