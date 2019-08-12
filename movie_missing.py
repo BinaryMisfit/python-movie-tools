@@ -33,7 +33,7 @@ def main():
     if movie_list is None:
         sys.exit(1)
 
-    movie_folder = Path('/Volumes/ProMedia/movies/')
+    movie_folder = Path('/Volumes/ProRaid/movies/')
     if movie_folder.exists:
         if movie_folder.is_dir:
             for movie in movie_folder.iterdir():
