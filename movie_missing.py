@@ -18,9 +18,7 @@ def load_radarr_movies():
                                                      radarr_api_key)
     r = get(get_movies_url)
     if (r.status_code == 200):
-        movie_list = r.json()
-        movie_path = [m['path'] for m in movie_list]
-        movie_path = sorted(movie_path)
+        movie_path = r.json()
         return movie_path
 
     return None
@@ -33,18 +31,23 @@ def main():
     if movie_list is None:
         sys.exit(1)
 
+    for movie in movie_list:
+        print(("{0}: {1} - {2}".format(movie['title'], movie['hasFile'],
+                                       movie['folderName'])))
+
     movie_folder = Path('/Volumes/ProRaid/movies/')
     movie_count = 0
-    if movie_folder.exists:
-        if movie_folder.is_dir:
+    if movie_folder.exists():
+        if movie_folder.is_dir():
             for movie in movie_folder.iterdir():
-                if 'DS_Store' not in movie.name:
-                    if movie.is_dir:
+                if movie.is_dir():
+                    movie_file = movie_folder.glob('*.mkv')
+                    has_movie = len(movie_file) > 0
+                    if has_movie:
                         movie_count += 1
-                        if str(movie) not in movie_list:
-                            print(str(movie))
+                    print(str(movie))
 
-    print("Total movies found: {0}").format(movie_count)
+    print(("Total movies found: {0}").format(movie_count))
     sys.exit(0)
 
 
