@@ -11,8 +11,13 @@
 
 
 class SABResult(object):
-    def __init__(self, result, convert=False, data=None, error=None,
-                 video_track=0, audio_track=0):
+    def __init__(self,
+                 result,
+                 convert=False,
+                 data=None,
+                 error=None,
+                 video_track=0,
+                 audio_track=0):
         self.result = result
         self.data = data
         self.error = error
@@ -133,7 +138,9 @@ def validate_conversion(convert_file):
     convert = convert or len(file_data.audio_tracks) != 1
     convert = convert or len(file_data.subtitle_tracks) > 0
     print('Validate MKV:\t\tConversion - {0}'.format(convert))
-    return SABResult(True, convert=True, video_track=use_video_track,
+    return SABResult(True,
+                     convert=True,
+                     video_track=use_video_track,
                      audio_track=use_audio_track)
 
 
@@ -147,7 +154,9 @@ def validate_mkv_file(validate_file):
         if not validate_success.convert:
             return SABResult(True, data=validate_file, convert=False)
 
-        return SABResult(True, data=validate_file, convert=True,
+        return SABResult(True,
+                         data=validate_file,
+                         convert=True,
                          video_track=validate_success.video_track,
                          audio_track=validate_success.audio_track)
 
@@ -224,8 +233,8 @@ def convert_mkv_file(folder, mkv_file, video_track, audio_track):
     """Convert the MKV file if required"""
     convert_success = backup_original_file(folder, mkv_file)
     if convert_success.result:
-        convert_success = create_output_file(
-            convert_success.data, mkv_file, video_track, audio_track)
+        convert_success = create_output_file(convert_success.data, mkv_file,
+                                             video_track, audio_track)
 
     if convert_success.result:
         convert_success = validate_output_file(convert_success.data)

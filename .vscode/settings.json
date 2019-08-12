@@ -2,8 +2,14 @@
     "workbench.colorCustomizations": {
         "tab.unfocusedActiveBorder": "#fff0"
     },
-    "python.pythonPath": "C:\\Program Files\\Python37\\python.exe",
+    "python.pythonPath": "/usr/local/bin/python",
     "python.linting.pylintEnabled": false,
     "python.linting.enabled": true,
-    "python.linting.flake8Enabled": true
+    "python.linting.flake8Enabled": true,
+    "cSpell.words": [
+        "Bnzb",
+        "mkvmerge",
+        "mkvtoolnix",
+        "pymediainfo"
+    ]
 }

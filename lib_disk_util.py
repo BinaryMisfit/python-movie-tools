@@ -24,8 +24,8 @@ def list_all_files(target_folder):
     folder = Path(target_folder)
     if not folder.exists():
         return DiskResult(False, error='Folder missing')
-    
-    files = folder.glob('**/*') 
+
+    files = folder.glob('**/*')
     if files is None:
         return DiskResult(False, error='No file found')
 
@@ -37,7 +37,7 @@ def check_contains_file(target_folder, target_extension):
     folder = Path(target_folder)
     if not folder.exists():
         return DiskResult(False, error='Folder missing')
-    
+
     files = folder.glob(target_extension)
     if files is None:
         return DiskResult(False, error='No file found')
@@ -50,7 +50,7 @@ def get_first_file(target_folder, target_extension):
     folder = Path(target_folder)
     if not folder.exists():
         return DiskResult(False, error='Folder missing')
-    
+
     files = folder.glob(target_extension)
     if files is None:
         return DiskResult(False, error='No file found')
@@ -85,7 +85,7 @@ def delete_file(target):
 
 def file_size_format(num, suffix='B'):
     """Return file size in human readable format"""
-    for unit in ['','Ki','Mi','Gi','Ti','Pi','Ei','Zi']:
+    for unit in ['', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei', 'Zi']:
         if abs(num) < 1024.0:
             return "%3.1f%s%s" % (num, unit, suffix)
         num /= 1024.0
@@ -97,5 +97,4 @@ def cmd_exists(cmd):
     import os
     return any(
         os.access(os.path.join(path, cmd), os.X_OK)
-        for path in os.environ["PATH"].split(os.pathsep)
-    )
+        for path in os.environ["PATH"].split(os.pathsep))

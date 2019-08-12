@@ -13,11 +13,18 @@ from pathlib import Path
 
 class MovieFolder(object):
     """Object containing all information for the script"""
-
-    def __init__(self, mkv_file, org_name=None, new_name=None,
-                 folder_name=None, parent=None, quality=None,
-                 needs_clean=False, new_parent=False,
-                 needs_quality=False, result='', error=False):
+    def __init__(self,
+                 mkv_file,
+                 org_name=None,
+                 new_name=None,
+                 folder_name=None,
+                 parent=None,
+                 quality=None,
+                 needs_clean=False,
+                 new_parent=False,
+                 needs_quality=False,
+                 result='',
+                 error=False):
         self.mkv_file = mkv_file
         self.org_name = org_name
         self.folder_name = folder_name
@@ -74,7 +81,8 @@ def validate_mkv(file):
     list_files.extend(mkv_parent.glob('*.srt'))
     needs_clean = len(list_files) > 0
     movie_folder.needs_clean = needs_clean
-    has_quality = '[' in movie_folder.folder_name and ']' in movie_folder.folder_name
+    has_quality = ('[' in movie_folder.folder_name
+                   and ']' in movie_folder.folder_name)
     match_name = not mkv_file.name.startswith(movie_folder.folder_name)
     movie_folder.new_parent = has_quality or match_name
     needs_quality = movie_folder.quality not in mkv_file.name
@@ -111,6 +119,8 @@ def get_video_quality(movie_folder):
                 return_quality = "720p"
                 if int(track.sampled_height) >= 500:
                     return_quality = "Bluray-" + return_quality
+
+
 #                else:
 #                    return_quality = "HDTV-" + return_quality
             elif int(track.sampled_height) == 1080:
@@ -135,9 +145,9 @@ def add_quality(movie_folder):
     if has_quality:
         movie_name = movie_name[0:movie_name.index('[') - 1].strip()
 
-    movie_folder.new_name = '{0} [{1}]{2}'.format(
-        movie_name, movie_folder.quality,
-        movie_folder.mkv_file.suffix)
+    movie_folder.new_name = '{0} [{1}]{2}'.format(movie_name,
+                                                  movie_folder.quality,
+                                                  movie_folder.mkv_file.suffix)
     movie_update = Path(movie_folder.parent)
     movie_update = movie_update.joinpath(movie_folder.new_name)
     try:
@@ -179,8 +189,8 @@ def process_folder(folder):
     if movie.quality is not None:
         print('Quality:\t\t{0}'.format(movie.quality))
     if movie.error:
-        print('Validation:\t\t{0}{1}'.format(
-            colored('Failed - ', 'red'), colored(movie.result, 'red')))
+        print('Validation:\t\t{0}{1}'.format(colored('Failed - ', 'red'),
+                                             colored(movie.result, 'red')))
     else:
         print('Validation:\t\t{0}'.format(colored('Success', 'green')))
 
@@ -188,9 +198,9 @@ def process_folder(folder):
         if not movie.error:
             movie = clean_movie_folder(movie)
             if movie.error:
-                print('Cleanup:\t\t{0}{1}'.format(
-                      colored('Failed - ', 'red'),
-                      colored(movie.result, 'red')))
+                print('Cleanup:\t\t{0}{1}'.format(colored('Failed - ', 'red'),
+                                                  colored(movie.result,
+                                                          'red')))
             else:
                 print('Cleanup:\t\t{0}'.format(colored('Success', 'green')))
     else:
@@ -200,9 +210,9 @@ def process_folder(folder):
         if not movie.error:
             movie = add_quality(movie)
             if movie.error:
-                print('Quality:\t\t{0}{1}'.format(
-                      colored('Failed - ', 'red'),
-                      colored(movie.result, 'red')))
+                print('Quality:\t\t{0}{1}'.format(colored('Failed - ', 'red'),
+                                                  colored(movie.result,
+                                                          'red')))
             else:
                 print('Quality:\t\t{0}'.format(colored('Success', 'green')))
     else:
@@ -213,8 +223,7 @@ def process_folder(folder):
             movie = rename_parent(movie)
             if movie.error:
                 print('Rename:\t\t\t{0}{1}'.format(
-                      colored('Failed - ', 'red'),
-                      colored(movie.result, 'red')))
+                    colored('Failed - ', 'red'), colored(movie.result, 'red')))
             else:
                 print('Rename:\t\t\t{0}'.format(colored('Success', 'green')))
     else:
@@ -231,7 +240,9 @@ def main():
     init()
     parser = argparse.ArgumentParser(
         description='Clean a MKV file name and all relevant files and tags')
-    parser.add_argument('file', metavar='file', type=str,
+    parser.add_argument('file',
+                        metavar='file',
+                        type=str,
                         help='MKV file to clean')
     args = parser.parse_args()
     movie = process_folder(args.file)
