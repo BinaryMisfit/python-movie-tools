@@ -34,13 +34,16 @@ def main():
         sys.exit(1)
 
     movie_folder = Path('/Volumes/ProRaid/movies/')
+    movie_count = 0
     if movie_folder.exists:
         if movie_folder.is_dir:
             for movie in movie_folder.iterdir():
                 if movie.is_dir:
+                    movie += 1
                     if str(movie) not in movie_list:
                         print(str(movie))
 
+    print("Total movies found: {0}").format(movie_count)
     sys.exit(0)
 
 
