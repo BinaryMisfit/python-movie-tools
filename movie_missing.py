@@ -38,9 +38,8 @@ def main():
         if movie_folder.is_dir:
             for movie in movie_folder.iterdir():
                 if movie.is_dir:
-                    print(str(movie))
-                    if str(movie) in movie_list:
-                        print('Found')
+                    if str(movie) not in movie_list:
+                        print(str(movie))
 
     sys.exit(0)
 
