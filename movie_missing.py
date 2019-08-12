@@ -24,12 +24,21 @@ def load_radarr_movies():
     return None
 
 
+def find_movie(movie_list, path):
+    for movie in movie_list:
+        if movie['folderName'] == path:
+            return movie
+    return None
+
+
 def check_movie(movie_list, movie):
     print(str(movie))
     mkv_files = []
     mkv_files = mkv_files.extend(movie.glob('*.mkv'))
     has_movie = mkv_files is not None and len(mkv_files) > 0
-    movie_info = next((x for x in movie_list if x.path == str(movie)), None)
+    movie_info = next((x for x in movie_list if x['folderPath'] == str(movie)),
+                      None)
+    movie_info = find_movie(movie_list, str(movie))
     print(movie_info)
     if has_movie:
         return 1
@@ -42,10 +51,6 @@ def main():
     movie_list = load_radarr_movies()
     if movie_list is None:
         sys.exit(1)
-
-    for movie in movie_list:
-        print(("{0}: {1} - {2}".format(movie['title'], movie['hasFile'],
-                                       movie['folderName'])))
 
     movie_folder = Path('/Volumes/ProRaid/movies/')
     movie_count = 0
