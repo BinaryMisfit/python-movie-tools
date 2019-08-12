@@ -36,7 +36,7 @@ def main():
     movie_folder = Path('/Volumes/ProMedia/movies/')
     if movie_folder.exists:
         if movie_folder.is_dir:
-            for movie in movie_folder.iterdir:
+            for movie in movie_folder.iterdir():
                 print(movie.name)
 
     sys.exit(0)
