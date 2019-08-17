@@ -9,7 +9,7 @@
 # Current Version: 0.0.1
 ##########################################################################
 radarr_api_url = "https://radarr.senselesslyfoolish.com/api"
-radarr_api_key = '3070b92e6c3f47d88dd3d6682089f2ae'
+radarr_api_key = "3070b92e6c3f47d88dd3d6682089f2ae"
 
 
 def load_radarr_movies():
@@ -26,22 +26,22 @@ def load_radarr_movies():
 
 def find_movie(movie_list, path):
     for movie in movie_list:
-        if movie['folderName'] == path:
+        if movie["folderName"] == path:
             return movie
     return None
 
 
 def check_movie(movie_list, movie):
-    mkv_files = movie.glob('*.mkv')
+    mkv_files = movie.glob("*.mkv")
     has_movie = mkv_files is not None
     movie_info = find_movie(movie_list, str(movie))
     if movie_info is not None:
         if not movie_info["downloaded"]:
             print(str(movie))
-            print(('Movie Found: {0}').format(has_movie))
+            print(("Movie Found: {0}").format(has_movie))
     else:
         print(str(movie))
-        print(('Movie Found: {0}. Not in Radarr').format(has_movie))
+        print(("Movie Found: {0}. Not in Radarr").format(has_movie))
 
     if has_movie:
         return 1
@@ -55,7 +55,7 @@ def main():
     if movie_list is None:
         sys.exit(1)
 
-    movie_folder = Path('/Volumes/ProRaid/movies/')
+    movie_folder = Path("/Volumes/ProRaid/movies/")
     movie_count = 0
     if movie_folder.exists():
         if movie_folder.is_dir():
@@ -67,5 +67,5 @@ def main():
     sys.exit(0)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

@@ -50,7 +50,7 @@ def process(folder):
 
         if process_file:
             print("---")
-            print(f"Processing:\t\t{batch_child.name}n)
+            print(f"Processing:\t\t{batch_child.name}")
             get_file = get_first_file(str(batch_child), "*.mkv")
             if not get_file.result:
                 process_file = False

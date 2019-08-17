@@ -23,11 +23,11 @@ def list_all_files(target_folder):
     """List all the files in a folder"""
     folder = Path(target_folder)
     if not folder.exists():
-        return DiskResult(False, error='Folder missing')
+        return DiskResult(False, error="Folder missing")
 
-    files = folder.glob('**/*')
+    files = folder.glob("**/*")
     if files is None:
-        return DiskResult(False, error='No file found')
+        return DiskResult(False, error="No file found")
 
     return DiskResult(True, data=files)
 
@@ -36,11 +36,11 @@ def check_contains_file(target_folder, target_extension):
     """Checks for a specific set of files in a folder"""
     folder = Path(target_folder)
     if not folder.exists():
-        return DiskResult(False, error='Folder missing')
+        return DiskResult(False, error="Folder missing")
 
     files = folder.glob(target_extension)
     if files is None:
-        return DiskResult(False, error='No file found')
+        return DiskResult(False, error="No file found")
 
     return DiskResult(True, data=files)
 
@@ -49,11 +49,11 @@ def get_first_file(target_folder, target_extension):
     """Return the first file matching the target_extension"""
     folder = Path(target_folder)
     if not folder.exists():
-        return DiskResult(False, error='Folder missing')
+        return DiskResult(False, error="Folder missing")
 
     files = folder.glob(target_extension)
     if files is None:
-        return DiskResult(False, error='No file found')
+        return DiskResult(False, error="No file found")
 
     for get_file in files:
         return DiskResult(True, data=get_file)
@@ -63,14 +63,14 @@ def rename_file(source, target):
     """Rename file"""
     source_file = Path(source)
     if not source_file.exists():
-        return DiskResult(False, error='File not found %s' % source)
+        return DiskResult(False, error=f"File not found {source}")
 
     delete_file(target)
     target_file = Path(target)
     source_file.rename(target_file)
     target_file = Path(target)
     if not target_file.exists():
-        return DiskResult(False, error='Rename failed')
+        return DiskResult(False, error="Rename failed")
 
     return DiskResult(True, data=str(target_file))
 
@@ -83,13 +83,13 @@ def delete_file(target):
         target_file.unlink()
 
 
-def file_size_format(num, suffix='B'):
+def file_size_format(num, suffix="B"):
     """Return file size in human readable format"""
-    for unit in ['', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei', 'Zi']:
+    for unit in ["", "Ki", "Mi", "Gi", "Ti", "Pi", "Ei", "Zi"]:
         if abs(num) < 1024.0:
             return "%3.1f%s%s" % (num, unit, suffix)
         num /= 1024.0
-    return "%.1f%s%s" % (num, 'Yi', suffix)
+    return "%.1f%s%s" % (num, "Yi", suffix)
 
 
 def cmd_exists(cmd):
