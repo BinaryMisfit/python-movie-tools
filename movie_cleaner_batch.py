@@ -81,7 +81,7 @@ def main():
     args = parser.parse_args()
     movie = process(args.folder)
     if movie.error:
-        print(f"Error\t\t{colored(movie_result, "red")}")
+        print(f"Error\t\t{colored(movie.result, 'red')}")
         sys.exit(1)
 
     sys.exit(0)
