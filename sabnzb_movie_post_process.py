@@ -39,7 +39,6 @@ def check_valid_files(folder):
     """Check if a valid MKV file exists"""
     from lib_disk_util import check_contains_file
     list_files = check_contains_file(folder, '*.mkv')
-    print(list_files)
     if not list_files.result:
         return SABResult(False, error=list_files.error)
 
@@ -58,7 +57,6 @@ def check_valid_files(folder):
         elif mkv_file is not None:
             list_file.unlink()
 
-    print(mkv_file)
     if mkv_file is None:
         return SABResult(False, error='MKV file not found')
 
@@ -266,14 +264,13 @@ def main():
 
     validate_files_result = check_valid_files(sab_directory)
     script_success = validate_files_result
-    print(validate_files_result)
     if validate_files_result.result:
         print('Validate Files:\t\tSuccess')
     else:
         print('Validate Files:\t\tFailed')
 
     mkv_source = None
-    if validate_files_result.result:
+    if script_success.result:
         mkv_source = validate_files_result.data
         validate_mkv_result = validate_mkv_file(mkv_source)
         script_success = validate_mkv_result
@@ -284,7 +281,7 @@ def main():
     else:
         print('Validate MKV:\t\tFailed')
 
-    if validate_mkv_result.result:
+    if script_success.result:
         if validate_mkv_result.convert:
             convert_result = convert_mkv_file(sab_directory,
                                               validate_mkv_result.data,

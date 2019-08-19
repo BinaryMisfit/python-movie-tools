@@ -42,12 +42,10 @@ def list_all_files(target_folder):
 def check_contains_file(target_folder, target_extension):
     """Checks for a specific set of files in a folder"""
     folder = Path(target_folder)
-    print(folder)
     if not folder.exists():
         return DiskResult(False, error="Folder missing")
 
     files = folder.glob(target_extension)
-    print(files)
     if files is None:
         return DiskResult(False, error="No file found")
 
