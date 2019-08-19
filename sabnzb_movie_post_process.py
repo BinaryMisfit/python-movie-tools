@@ -58,6 +58,7 @@ def check_valid_files(folder):
         elif mkv_file is not None:
             list_file.unlink()
 
+    print(mkv_file)
     if mkv_file is None:
         return SABResult(False, error='MKV file not found')
 
@@ -265,6 +266,7 @@ def main():
 
     validate_files_result = check_valid_files(sab_directory)
     script_success = validate_files_result
+    print(validate_files_result)
     if validate_files_result.result:
         print('Validate Files:\t\tSuccess')
     else:

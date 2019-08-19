@@ -18,6 +18,14 @@ class DiskResult(object):
         self.data = data
         self.error = error
 
+    def __repr__(self):
+        return ('<DiskResult result: {0} data: {1} error: {2} '
+                '>').format(self.result, self.data, self.error)
+
+    def __str__(self):
+        return repr(self)
+
+
 
 def list_all_files(target_folder):
     """List all the files in a folder"""
