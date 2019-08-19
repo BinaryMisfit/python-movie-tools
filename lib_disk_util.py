@@ -26,7 +26,6 @@ class DiskResult(object):
         return repr(self)
 
 
-
 def list_all_files(target_folder):
     """List all the files in a folder"""
     folder = Path(target_folder)
