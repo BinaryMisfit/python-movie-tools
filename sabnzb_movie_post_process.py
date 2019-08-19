@@ -39,6 +39,7 @@ def check_valid_files(folder):
     """Check if a valid MKV file exists"""
     from lib_disk_util import check_contains_file
     list_files = check_contains_file(folder, '*.mkv')
+    print(list_files)
     if not list_files.result:
         return SABResult(False, error=list_files.error)
 
