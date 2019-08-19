@@ -72,7 +72,7 @@ def rename_file(source, target):
     """Rename file"""
     source_file = Path(source)
     if not source_file.exists():
-        return DiskResult(False, error=f"File not found {source}")
+        return DiskResult(False, error="Source not found")
 
     delete_file(target)
     target_file = Path(target)
