@@ -210,6 +210,32 @@ def create_output_file(source_file, output_file, video_track, audio_track):
     return SABResult(False, error="Command output\n{0}".format(result_content))
 
 
+def convert_mp4_file(mp4_file):
+    from delegator import run
+    from lib_disk_util import cmd_exists, delete_file
+    from pathlib import Path
+    """Convert MP4 file to MKV"""
+    mp4_file = Path(mp4_file)
+    mkv_file = ("{0}.mkv").format(mp4_file.stem)
+    print mkv_file
+    executable = "/usr/local/bin/ffmpeg"
+    installed = cmd_exists(executable)
+    if not installed:
+        return SABResult(False, error="Package ffmpeg not found")
+
+    command = ("{0} -i \"{1}\" -vcodec copy -acodec copy \"{2}\"").format(
+        executable, mp4_file, mkv_file)
+    print command
+    output = run(command)
+    result_code = output.return_code
+    result_content = output.out
+    if int(result_code) == 0:
+        delete_file(mp4_file)
+        return SABResult(True, data=mkv_file)
+
+    return SABResult(False, error="Command output\n{0}".format(result_content))
+
+
 def validate_output_file(source_file):
     """Validate the MKV file contains required tracks"""
     mkv_file = read_mkv_file(str(source_file))
@@ -233,30 +259,6 @@ def validate_output_file(source_file):
         return SABResult(True, data=source_file)
 
     return SABResult(False, error="Broken conversion")
-
-
-def convert_mp4_file(mp4_file):
-    from delegator import run
-    from lib_disk_util import cmd_exists, delete_file
-    from pathlib import Path
-    """Convert MP4 file to MKV"""
-    mp4_file = Path(mp4_file)
-    mkv_file = ("{0}.mkv").format(mp4_file.stem)
-    executable = "/usr/local/bin/ffmpeg"
-    installed = cmd_exists(executable)
-    if not installed:
-        return SABResult(False, error="Package ffmpeg not found")
-
-    command = ("{0} -i \"{1}\" -vcodec copy -acodec copy {2} ".format(
-               executable, mp4_file, mkv_file)
-    output = run(command)
-    result_code = output.return_code
-    result_content = output.out
-    if int(result_code) == 0:
-        delete_file(mp4_file)
-        return SABResult(True, data=mkv_file)
-
-    return SABResult(False, error="Command output\n{0}".format(result_content))
 
 
 def convert_mkv_file(folder, mkv_file, video_track, audio_track):
