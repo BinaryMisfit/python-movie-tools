@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 ##########################################################################
 # DISK LIBRARY
@@ -19,8 +19,8 @@ class DiskResult(object):
         self.error = error
 
     def __repr__(self):
-        return ('<DiskResult result: {0} data: {1} error: {2} '
-                '>').format(self.result, self.data, self.error)
+        return ("<DiskResult result: {0} data: {1} error: {2} "
+                ">").format(self.result, self.data, self.error)
 
     def __str__(self):
         return repr(self)
