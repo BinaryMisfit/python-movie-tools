@@ -42,12 +42,10 @@ def check_valid_files(folder):
     from lib_disk_util import check_contains_file
     encode = False
     list_files = check_contains_file(folder, "*.mkv")
-    print(("MKV File: {0}").format(list_files))
     if not list_files.result:
         list_files = check_contains_file(folder, "*.mp4")
         encode = True
 
-    print(("MP4 File: {0}").format(list_files))
     if not list_files.result:
         return SABResult(False, error=list_files.error)
 
@@ -56,6 +54,7 @@ def check_valid_files(folder):
 
     media_file = None
     check_file_size = 0
+    print(list_files.data)
     for list_file in list_files.data:
         print(list_file)
         if (list_file.stat().st_size > check_file_size):
