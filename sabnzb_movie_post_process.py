@@ -41,8 +41,10 @@ def check_valid_files(folder):
     """Check if a valid MKV file exists"""
     from lib_disk_util import check_contains_file
     encode = False
+    print("Check MKV")
     list_files = check_contains_file(folder, "*.mkv")
     if not list_files.result:
+        print("Check MP4")
         list_files = check_contains_file(folder, "*.mp4")
         encode = True
 
