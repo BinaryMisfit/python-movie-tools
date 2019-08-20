@@ -50,7 +50,7 @@ def check_contains_file(target_folder, target_extension):
     for file in files:
         file_list.append(file)
 
-    if file_list.count() == 0:
+    if len(file_list) == 0:
         return DiskResult(False, error="No file found")
 
     print(target_extension)

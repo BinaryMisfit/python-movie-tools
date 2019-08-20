@@ -54,7 +54,7 @@ def check_valid_files(folder):
     if not list_files.result:
         return SABResult(False, error=list_files.error)
 
-    if media_files.count() == 0:
+    if len(media_files) == 0:
         return SABResult(False, error="No files to process")
 
     media_file = None
