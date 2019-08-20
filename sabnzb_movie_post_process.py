@@ -55,10 +55,10 @@ def check_valid_files(folder):
     media_file = None
     check_file_size = 0
     print(list_files.data)
-    list_file_count = sum(1 for file in list_files)
+    list_file_count = sum(1 for file in list_files.data)
     print(list_file_count)
     if list_file_count == 1:
-        media_file = list_files.next()
+        media_file = list_files.data.next()
     else:
         for list_file in list_files.data:
             print(list_file)
