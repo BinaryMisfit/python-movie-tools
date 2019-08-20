@@ -52,24 +52,23 @@ def check_valid_files(folder):
     if list_files.data is None:
         return SABResult(False, error="No files to process")
 
+    print(list_files)
+    print(list_files.data)
     media_files = list_files.data
     if media_files.count == 0:
         return SABResult(False, error="No files to process")
 
     media_file = None
     check_file_size = 0
-    if media_files.count == 1:
-        media_file = media_files[0]
-    else:
-        for list_file in media_files:
-            if (list_file.stat().st_size > check_file_size):
-                check_file_size = list_file.stat().st_size
-                if media_file is not None:
-                    media_file.unlink()
+    for list_file in media_files:
+        if (list_file.stat().st_size > check_file_size):
+            check_file_size = list_file.stat().st_size
+            if media_file is not None:
+                media_file.unlink()
 
-                media_file = list_file
-            elif media_file is not None:
-                list_file.unlink()
+            media_file = list_file
+        elif media_file is not None:
+            list_file.unlink()
 
     print(("Media File: {0}").format(media_file))
     if media_file is None:
