@@ -55,16 +55,21 @@ def check_valid_files(folder):
     media_file = None
     check_file_size = 0
     print(list_files.data)
-    for list_file in list_files.data:
-        print(list_file)
-        if (list_file.stat().st_size > check_file_size):
-            check_file_size = list_file.stat().st_size
-            if media_file is not None:
-                media_file.unlink()
+    list_file_count = sum(1 for file in list_files)
+    print(list_file_count)
+    if list_file_count == 1:
+        media_file = list_files.next()
+    else:
+        for list_file in list_files.data:
+            print(list_file)
+            if (list_file.stat().st_size > check_file_size):
+                check_file_size = list_file.stat().st_size
+                if media_file is not None:
+                    media_file.unlink()
 
-            media_file = list_file
-        elif media_file is not None:
-            list_file.unlink()
+                media_file = list_file
+            elif media_file is not None:
+                list_file.unlink()
 
     print(("Media File: {0}").format(media_file))
     if media_file is None:
