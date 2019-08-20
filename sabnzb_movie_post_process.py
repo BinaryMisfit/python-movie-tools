@@ -21,6 +21,7 @@ class SABResult(object):
                  audio_track=0):
         self.result = result
         self.data = data
+        self.encode = encode
         self.error = error
         self.convert = convert
         self.video_track = video_track
