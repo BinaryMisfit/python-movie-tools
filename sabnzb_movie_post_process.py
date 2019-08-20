@@ -236,8 +236,27 @@ def validate_output_file(source_file):
 
 
 def convert_mp4_file(mp4_file):
-    mkv_file = ""
-    return SABResult(True, data=mkv_file)
+    from delegator import run
+    from lib_disk_util import cmd_exists, delete_file
+    from pathlib import Path
+    """Convert MP4 file to MKV"""
+    mp4_file = Path(mp4_file)
+    mkv_file = ("{0}.mkv").format(mp4_file.stem)
+    executable = "/usr/local/bin/ffmpeg"
+    installed = cmd_exists(executable)
+    if not installed:
+        return SABResult(False, error="Package ffmpeg not found")
+
+    command = ("{0} -i \"{1}\" -vcodec copy -acodec copy {2} ".format(
+               executable, mp4_file, mkv_file)
+    output = run(command)
+    result_code = output.return_code
+    result_content = output.out
+    if int(result_code) == 0:
+        delete_file(mp4_file)
+        return SABResult(True, data=mkv_file)
+
+    return SABResult(False, error="Command output\n{0}".format(result_content))
 
 
 def convert_mkv_file(folder, mkv_file, video_track, audio_track):
@@ -282,15 +301,18 @@ def main():
 
     media_source = None
     if script_success.result:
-        media_source = script_success.data
-        convert_mp4_result = convert_mp4_file(media_source)
-        script_success = convert_mp4_result
-        if script_success.result:
-            print("Convert MP4:\t\tSuccess")
+        if script_success.encode:
+            media_source = script_success.data
+            convert_mp4_result = convert_mp4_file(media_source)
+            script_success = convert_mp4_result
+            if script_success.result:
+                print("Convert MP4:\t\tSuccess")
+            else:
+                print("Convert MP4:\t\tFailed")
         else:
-            print("Convert MP4:\t\tFailed")
+            print("Convert MP4:\t\tSkipped")
     else:
-        print("Convert MP4:\t\tSkipped")
+        print("Convert MP4:\t\tFailed")
 
     if script_success.result:
         media_source = script_success.data

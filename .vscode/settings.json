@@ -8,8 +8,11 @@
     "python.linting.flake8Enabled": true,
     "cSpell.words": [
         "Bnzb",
+        "acodec",
+        "ffmpeg",
         "mkvmerge",
         "mkvtoolnix",
-        "pymediainfo"
+        "pymediainfo",
+        "vcodec"
     ]
 }
