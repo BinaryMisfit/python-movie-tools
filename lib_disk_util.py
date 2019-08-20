@@ -53,6 +53,8 @@ def check_contains_file(target_folder, target_extension):
     if file_count == 0:
         return DiskResult(False, error="No file found")
 
+    print(target_extension)
+    print(files)
     return DiskResult(True, data=files)
 
 
