@@ -45,18 +45,14 @@ def check_contains_file(target_folder, target_extension):
     if not folder.exists():
         return DiskResult(False, error="Folder missing")
 
-    files = folder.glob(target_extension)
-    if files is None:
-        return DiskResult(False, error="No file found")
-
-    file_count = sum(1 for file in files)
-    if file_count == 0:
-        return DiskResult(False, error="No file found")
-
     file_list = []
+    files = folder.glob(target_extension)
     for file in files:
         print(file)
         file_list.append(file)
+
+    if file_list.count == 0:
+        return DiskResult(False, error="No file found")
 
     return DiskResult(True, data=file_list)
 
