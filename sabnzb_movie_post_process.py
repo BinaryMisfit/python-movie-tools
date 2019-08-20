@@ -42,12 +42,12 @@ def check_valid_files(folder):
     from lib_disk_util import check_contains_file
     encode = False
     list_files = check_contains_file(folder, "*.mkv")
-    print(list_files)
+    print(("MKV File: {0}").format(list_files))
     if not list_files.result:
         list_files = check_contains_file(folder, "*.mp4")
         encode = True
 
-    print(list_files)
+    print(("MP4 File: {0}").format(list_files))
     if not list_files.result:
         return SABResult(False, error=list_files.error)
 
@@ -66,6 +66,7 @@ def check_valid_files(folder):
         elif media_file is not None:
             list_file.unlink()
 
+    print(("Media File: {0}").format(media_file))
     if media_file is None:
         return SABResult(False, error="Media file not found")
 
@@ -220,8 +221,8 @@ def convert_mp4_file(mp4_file):
     """Convert MP4 file to MKV"""
     mp4_file = Path(mp4_file)
     mkv_file = ("{0}.mkv").format(mp4_file.stem)
-    print(mp4_file)
-    print(mkv_file)
+    print(("MP4 File: {0}").format(mp4_file))
+    print(("MKV File: {0}").format(mkv_file))
     executable = "/usr/local/bin/ffmpeg"
     installed = cmd_exists(executable)
     if not installed:
@@ -299,7 +300,6 @@ def main():
         sys.exit(0)
 
     validate_files_result = check_valid_files(sab_directory)
-    print(validate_files_result)
     script_success = validate_files_result
     if script_success.result:
         print("Validate Files:\t\tSuccess")
