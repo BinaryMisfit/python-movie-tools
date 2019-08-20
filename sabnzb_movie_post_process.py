@@ -218,7 +218,8 @@ def convert_mp4_file(mp4_file):
     from pathlib import Path
     """Convert MP4 file to MKV"""
     mp4_file = Path(mp4_file)
-    mkv_file = mp4_file.parent.joinpath(mp4_file.stem)
+    mkv_file = ("{0}.mkv").format(mp4_file.stem)
+    mkv_file = mp4_file.parent.joinpath(mkv_file)
     print(mkv_file)
     executable = "/usr/local/bin/ffmpeg"
     installed = cmd_exists(executable)
