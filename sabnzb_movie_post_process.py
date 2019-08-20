@@ -283,7 +283,7 @@ def main():
     media_source = None
     if script_success.result:
         media_source = script_success.data
-        convert_mp4_result = convert_mp4_file()
+        convert_mp4_result = convert_mp4_file(media_source)
         script_success = convert_mp4_result
         if script_success.result:
             print("Convert MP4:\t\tSuccess")
