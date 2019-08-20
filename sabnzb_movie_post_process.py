@@ -46,6 +46,7 @@ def check_valid_files(folder):
         list_files = check_contains_file(folder, "*.mp4")
         encode = True
 
+    print(list_files)
     if not list_files.result:
         return SABResult(False, error=list_files.error)
 
@@ -53,6 +54,7 @@ def check_valid_files(folder):
         return SABResult(False, error="No files to process")
 
     media_files = list_files.data
+    print(media_files)
     media_file_count = sum(1 for file in media_files)
     print(media_file_count)
     if media_file_count == 0:
