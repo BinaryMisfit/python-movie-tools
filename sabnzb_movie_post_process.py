@@ -39,6 +39,7 @@ class SABResult(object):
 
 def check_valid_files(folder):
     """Check if a valid MKV file exists"""
+    from pathlib import Path
     from lib_disk_util import check_contains_file
     encode = False
     list_files = check_contains_file(folder, "*.mkv")
@@ -55,17 +56,18 @@ def check_valid_files(folder):
 
     media_files = list_files.data
     print(media_files)
-    media_file_count = sum(1 for file in media_files)
-    print(media_file_count)
-    if media_file_count == 0:
+    print(media_files.count)
+    if media_files.count == 0:
         return SABResult(False, error="No files to process")
 
     media_file = None
     check_file_size = 0
-    if media_file_count == 1:
-        media_file = list_files.data.next()
+    if media_files.count == 1:
+        media_file = Path(media_files[0])
     else:
         for list_file in media_files:
+            print(list_file)
+            list_file = Path(list_file)
             print(list_file)
             if (list_file.stat().st_size > check_file_size):
                 check_file_size = list_file.stat().st_size
