@@ -48,7 +48,6 @@ def check_contains_file(target_folder, target_extension):
     file_list = []
     files = folder.glob(target_extension)
     for file in files:
-        print(file)
         file_list.append(file)
 
     if file_list.count == 0:
