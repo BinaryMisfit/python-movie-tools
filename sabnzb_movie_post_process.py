@@ -57,6 +57,7 @@ def check_valid_files(folder):
     media_file = None
     check_file_size = 0
     for list_file in list_files.data:
+        print(list_file)
         if (list_file.stat().st_size > check_file_size):
             check_file_size = list_file.stat().st_size
             if media_file is not None:
