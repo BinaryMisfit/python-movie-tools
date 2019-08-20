@@ -52,15 +52,18 @@ def check_valid_files(folder):
     if list_files.data is None:
         return SABResult(False, error="No files to process")
 
+    media_files = list_files.data
+    media_file_count = sum(1 for file in media_files)
+    print(media_file_count)
+    if media_file_count == 0:
+        return SABResult(False, error="No files to process")
+
     media_file = None
     check_file_size = 0
-    print(list_files.data)
-    list_file_count = sum(1 for file in list_files.data)
-    print(list_file_count)
-    if list_file_count == 1:
+    if media_file_count == 1:
         media_file = list_files.data.next()
     else:
-        for list_file in list_files.data:
+        for list_file in media_files:
             print(list_file)
             if (list_file.stat().st_size > check_file_size):
                 check_file_size = list_file.stat().st_size
