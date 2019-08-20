@@ -41,16 +41,12 @@ def check_valid_files(folder):
     """Check if a valid MKV file exists"""
     from lib_disk_util import check_contains_file
     encode = False
-    print("Check MKV")
     list_files = check_contains_file(folder, "*.mkv")
-    print(list_files)
     if not list_files.result:
-        print("Check MP4")
         list_files = check_contains_file(folder, "*.mp4")
         encode = True
 
     media_files = list_files.data
-    print(media_files)
     if not list_files.result:
         return SABResult(False, error=list_files.error)
 
@@ -69,7 +65,6 @@ def check_valid_files(folder):
         elif media_file is not None:
             list_file.unlink()
 
-    print(("Media File: {0}").format(media_file))
     if media_file is None:
         return SABResult(False, error="Media file not found")
 
@@ -223,9 +218,8 @@ def convert_mp4_file(mp4_file):
     from pathlib import Path
     """Convert MP4 file to MKV"""
     mp4_file = Path(mp4_file)
-    mkv_file = ("{0}.mkv").format(mp4_file.stem)
-    print(("MP4 File: {0}").format(mp4_file))
-    print(("MKV File: {0}").format(mkv_file))
+    mkv_file = mp4_file.parent.joinpath(mp4_file.stem)
+    print(mkv_file)
     executable = "/usr/local/bin/ffmpeg"
     installed = cmd_exists(executable)
     if not installed:
@@ -233,7 +227,6 @@ def convert_mp4_file(mp4_file):
 
     command = ("{0} -i \"{1}\" -vcodec copy -acodec copy \"{2}\"").format(
         executable, mp4_file, mkv_file)
-    print(command)
     output = run(command)
     result_code = output.return_code
     result_content = output.out
