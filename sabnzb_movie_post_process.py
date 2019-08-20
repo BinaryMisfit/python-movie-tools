@@ -43,6 +43,7 @@ def check_valid_files(folder):
     encode = False
     print("Check MKV")
     list_files = check_contains_file(folder, "*.mkv")
+    print(list_files)
     if not list_files.result:
         print("Check MP4")
         list_files = check_contains_file(folder, "*.mp4")
@@ -53,7 +54,7 @@ def check_valid_files(folder):
     if not list_files.result:
         return SABResult(False, error=list_files.error)
 
-    if media_files.count == 0:
+    if media_files.count() == 0:
         return SABResult(False, error="No files to process")
 
     media_file = None
