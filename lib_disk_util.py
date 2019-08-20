@@ -55,6 +55,7 @@ def check_contains_file(target_folder, target_extension):
 
     file_list = []
     for file in files:
+        print(file)
         file_list.append(file)
 
     return DiskResult(True, data=file_list)
