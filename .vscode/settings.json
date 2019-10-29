@@ -1,11 +1,4 @@
 {
-    "workbench.colorCustomizations": {
-        "tab.unfocusedActiveBorder": "#fff0"
-    },
-    "python.pythonPath": "C:\\Users\\wirob\\scoop\\shims\\python.exe",
-    "python.linting.pylintEnabled": false,
-    "python.linting.enabled": true,
-    "python.linting.flake8Enabled": true,
     "cSpell.words": [
         "Bnzb",
         "acodec",
