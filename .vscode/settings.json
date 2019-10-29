@@ -7,5 +7,6 @@
         "mkvtoolnix",
         "pymediainfo",
         "vcodec"
-    ]
+    ],
+    "python.pythonPath": "/usr/local/bin/python2"
 }
