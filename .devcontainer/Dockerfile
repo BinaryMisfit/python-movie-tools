@@ -5,6 +5,7 @@ RUN apt-get update \
     && apt-get -y install git iproute2 procps lsb-release \
     && pip install --upgrade pip \
     && pip --no-cache-dir install \
+    autopep8 \
     delegator.py \
     enzyme \
     pathlib \

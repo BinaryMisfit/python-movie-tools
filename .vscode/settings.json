@@ -8,5 +8,7 @@
         "pymediainfo",
         "vcodec"
     ],
-    "python.pythonPath": "/usr/local/bin/python2"
+    "python.pythonPath": "/usr/local/bin/python2",
+    "python.formatting.provider": "autopep8",
+    "python.linting.enabled": true
 }
