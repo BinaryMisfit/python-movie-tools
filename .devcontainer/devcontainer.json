@@ -2,6 +2,10 @@
 	"name": "Python 2",
 	"context": "..",
 	"dockerFile": "Dockerfile",
+	"runArgs": [
+		"-v",
+		"${env:HOME}${env:USERPROFILE}/.gitconfig:/root/.gitconfig:ro"
+	],
 	"settings": {
 		"terminal.integrated.shell.linux": "/bin/bash",
 		"python.pythonPath": "/usr/local/bin/python",
