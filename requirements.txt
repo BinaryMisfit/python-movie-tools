@@ -1,3 +1,6 @@
+colorama==0.4.4
 delegator.py==0.1.1
 enzyme==0.4.1
 pathlib==1.0.1
+pymediainfo==5.0.3
+termcolor==1.1.0

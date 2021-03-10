@@ -13,6 +13,7 @@ from pathlib import Path
 
 class MovieFolder(object):
     """Object containing all information for the script"""
+
     def __init__(self,
                  mkv_file,
                  org_name=None,
@@ -117,10 +118,6 @@ def get_video_quality(movie_folder):
                 return_quality = "720p"
                 if int(track.sampled_height) >= 500:
                     return_quality = "Bluray-" + return_quality
-
-
-#                else:
-#                    return_quality = "HDTV-" + return_quality
             elif int(track.sampled_height) == 1080:
                 return_quality = "Bluray-1080p"
             elif int(track.sampled_width) >= 1000:

@@ -6,22 +6,23 @@
 
 # Script to clean movie files and folders
 
+from pathlib import Path
+
 # Current Version: 0.0.1
 ##########################################################################
 from movie_cleaner import process_folder
-from pathlib import Path
 
 
 class BatchFolder(object):
     """Object containing all information for the script"""
+
     def __init__(self, folder_name, result="", error=False):
         self.folder_name = folder_name
         self.result = result
         self.error = error
 
     def __repr__(self):
-        return f"<BatchFolder folder_name: {self.folder_name}, result:"
-        f"{self.result}, error: {self.error}"
+        return f"<BatchFolder folder_name: {self.folder_name}, result:"f"{self.result}, error: {self.error}"
 
     def __str__(self):
         return repr(self)
@@ -56,10 +57,10 @@ def process(folder):
                 process_file = False
 
         if process_file:
-            result = process_folder(str(get_file.data))
+            result = process_folder(str(batch_child.name))
             if result.error:
                 batch.error = result.error
-                batch.result = (f"Failed - {batch_child.name}")
+                batch.result = f"Failed - {batch_child.name}"
                 break
 
     return batch

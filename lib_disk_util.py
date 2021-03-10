@@ -13,6 +13,7 @@ from pathlib import Path
 
 class DiskResult(object):
     """Result return object"""
+
     def __init__(self, result, data=None, error=None):
         self.result = result
         self.data = data

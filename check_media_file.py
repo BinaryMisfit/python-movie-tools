@@ -10,7 +10,7 @@ class MediaFile(object):
         self.filename = filename
 
     def __repr__(self):
-        return ("<MediaFile filename: {0}").format(self.filename)
+        return "<MediaFile filename: {0}".format(self.filename)
 
     def __str__(self):
         return repr(self)
