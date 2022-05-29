@@ -1,14 +1,19 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 ##########################################################################
 # SABnzb Movie Post Process
 # ###
 
-# Provides post processing for movies downloaded via SABnzb
+# Provides post-processing for movies downloaded via SABnzb
 
 # Current Version: 0.0.1
 ##########################################################################
+import logging
+import tempfile
 
+log_file = tempfile.NamedTemporaryFile(delete=False, suffix=".log")
+logging.basicConfig(filename=log_file.name)
+logger = logging.getLogger()
 
 class SABResult(object):
     def __init__(self,
@@ -30,8 +35,8 @@ class SABResult(object):
     def __repr__(self):
         return ("<SABResult result: {0} data: {1} error: {2} convert: {3} "
                 "encode: {4}, video_track: {5} audio_track: {6}>").format(
-                    self.result, self.data, self.error, self.convert,
-                    self.encode, self.video_track, self.audio_track)
+            self.result, self.data, self.error, self.convert,
+            self.encode, self.video_track, self.audio_track)
 
     def __str__(self):
         return repr(self)
@@ -48,15 +53,17 @@ def check_valid_files(folder):
 
     media_files = list_files.data
     if not list_files.result:
+        logger.error("check_valid_files: {0}".format(list_files.error))
         return SABResult(False, error=list_files.error)
 
     if len(media_files) == 0:
+        logger.error("check_valid_files: No files to process")
         return SABResult(False, error="No files to process")
 
     media_file = None
     check_file_size = 0
     for list_file in media_files:
-        if (list_file.stat().st_size > check_file_size):
+        if list_file.stat().st_size > check_file_size:
             check_file_size = list_file.stat().st_size
             if media_file is not None:
                 media_file.unlink()
@@ -66,6 +73,7 @@ def check_valid_files(folder):
             list_file.unlink()
 
     if media_file is None:
+        logger.error("check_valid_files: Media file not found")
         return SABResult(False, error="Media file not found")
 
     return SABResult(True, encode=encode, data=media_file)
@@ -86,22 +94,26 @@ def read_mkv_file(source_file):
     return SABResult(True, data=mkv_file)
 
 
+def get_track_number(track):
+    if hasattr(track, "language"):
+        if track.language == "English":
+            return track.number - 1
+
+        if track.language == "eng":
+            return track.number - 1
+
+        if track.language == "und":
+            return track.number - 1
+
+        if track.language is None:
+            return track.number - 1
+
+
 def find_valid_video_track(file_data):
     """Check if the video tracks for the file contains a valid track"""
     if hasattr(file_data, "video_tracks"):
         for video_track in file_data.video_tracks:
-            if hasattr(video_track, "language"):
-                if video_track.language == "English":
-                    return video_track.number - 1
-
-                if video_track.language == "eng":
-                    return video_track.number - 1
-
-                if video_track.language == "und":
-                    return video_track.number - 1
-
-                if video_track.language is None:
-                    return video_track.number - 1
+            return get_track_number(video_track)
 
     return None
 
@@ -112,18 +124,7 @@ def find_valid_audio_track(file_data):
         for audio_track in file_data.audio_tracks:
             if hasattr(audio_track, "channels"):
                 if audio_track.channels in [6, 8]:
-                    if hasattr(audio_track, "language"):
-                        if audio_track.language == "English":
-                            return audio_track.number - 1
-
-                        if audio_track.language == "eng":
-                            return audio_track.number - 1
-
-                        if audio_track.language == "und":
-                            return audio_track.number - 1
-
-                        if audio_track.language is None:
-                            return audio_track.number - 1
+                    return get_track_number(audio_track)
 
 
 def validate_conversion(convert_file):
@@ -196,6 +197,11 @@ def create_output_file(source_file, output_file, video_track, audio_track):
     executable = "/usr/local/bin/mkvmerge"
     installed = cmd_exists(executable)
     if not installed:
+        executable = "C:\\Program Files\\MKVToolNix\\mkvmerge.exe"
+        installed = cmd_exists(executable)
+
+    if not installed:
+        logger.error("Package mkvtoolnix not found")
         return SABResult(False, error="Package mkvtoolnix not found")
 
     command = ("{0} -o \"{1}\" --track-order 0:{2},0:{3} --video-tracks {2} "
@@ -209,6 +215,7 @@ def create_output_file(source_file, output_file, video_track, audio_track):
         delete_file(source_file)
         return SABResult(True, data=output_file)
 
+    logger.error("create_output_file: ".format(result_content))
     return SABResult(False, error="Command output\n{0}".format(result_content))
 
 
@@ -225,7 +232,7 @@ def convert_mp4_file(mp4_file):
     if not installed:
         return SABResult(False, error="Package ffmpeg not found")
 
-    command = ("{0} -i \"{1}\" -vcodec copy -acodec copy \"{2}\"").format(
+    command = "{0} -i \"{1}\" -vcodec copy -acodec copy \"{2}\"".format(
         executable, mp4_file, mkv_file)
     output = run(command)
     result_code = output.return_code
@@ -279,18 +286,24 @@ def main():
     """Main script interface for SABnzb Movie Post Process"""
     import sys
     import os
-    sab_category = os.environ["SAB_CAT"]
-    sab_directory = os.environ["SAB_COMPLETE_DIR"]
-    sab_pp_status = os.environ["SAB_PP_STATUS"]
+    validate_mkv_result = None
+    sab_category = os.getenv("SAB_CAT")
+    sab_directory = os.getenv("SAB_COMPLETE_DIR")
+    sab_pp_status = os.getenv("SAB_PP_STATUS")
+    print("Logging to", log_file.name)
     if not sab_category == "movies":
+        logger.error("Skipping - Not in movies category")
         print("Skipping - Not in movies category")
         sys.exit(0)
 
     if not sab_directory.strip():
+        logger.error("Skipping - Directory not supplied")
         print("Skipping - Directory not supplied")
         sys.exit(0)
 
     if not int(sab_pp_status) == 0:
+        logger.error("Skipping - Post processing failed "
+                     "with status {0}".format(sab_pp_status))
         print("Skipping - Post processing failed "
               "with status {0}".format(sab_pp_status))
         sys.exit(0)
@@ -302,7 +315,6 @@ def main():
     else:
         print("Validate Files:\t\tFailed")
 
-    media_source = None
     if script_success.result:
         if script_success.encode:
             media_source = script_success.data
@@ -350,7 +362,7 @@ def main():
     if script_success.error is None:
         sys.exit(1)
 
-    print("Failed:\t\t\t{0}".format(script_success.error))
+    print("Failed:\t\t\t\t{0}".format(script_success.error))
     sys.exit(1)
 
 
