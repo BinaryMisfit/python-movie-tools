@@ -11,7 +11,7 @@
 import logging
 import tempfile
 
-log_file = tempfile.NamedTemporaryFile(delete=False, suffix=".log")
+log_file = tempfile.NamedTemporaryFile(delete=False, prefix="sabnzbd_", suffix=".log")
 logging.basicConfig(filename=log_file.name)
 logger = logging.getLogger()
 
@@ -194,7 +194,7 @@ def create_output_file(source_file, output_file, video_track, audio_track):
     """Generate a new MKV output file with only valid tracks"""
     from delegator import run
     from lib_disk_util import cmd_exists, delete_file
-    executable = "/usr/local/bin/mkvmerge"
+    executable = "/usr/bin/mkvmerge"
     installed = cmd_exists(executable)
     if not installed:
         executable = "C:\\Program Files\\MKVToolNix\\mkvmerge.exe"
@@ -227,7 +227,7 @@ def convert_mp4_file(mp4_file):
     mp4_file = Path(mp4_file)
     mkv_file = ("{0}.mkv").format(mp4_file.stem)
     mkv_file = mp4_file.parent.joinpath(mkv_file)
-    executable = "/usr/local/bin/ffmpeg"
+    executable = "/usr/bin/ffmpeg"
     installed = cmd_exists(executable)
     if not installed:
         return SABResult(False, error="Package ffmpeg not found")
