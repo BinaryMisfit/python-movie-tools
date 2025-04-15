@@ -1,0 +1,37 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Check Media File",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/check_media_file.py",
+      "console": "integratedTerminal",
+      "args": [
+        "${input:filename}"
+      ]
+    },
+    {
+      "name": "Movie Cleaner",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/movie_cleaner.py",
+      "console": "integratedTerminal",
+      "args": [
+        "${input:moviefile}"
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "id": "filename",
+      "type": "promptString",
+      "description": "Enter the filename to check"
+    },
+    {
+      "id": "moviefile",
+      "type": "promptString",
+      "description": "Enter the movie file to clean"
+    }
+  ]
+}
