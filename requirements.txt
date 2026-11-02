@@ -9,7 +9,7 @@ mccabe==0.7.0
 pexpect==4.9.0
 platformdirs==4.3.7
 ptyprocess==0.7.0
-pylint==3.3.6
+pylint==4.0.9
 pymediainfo==7.0.1
 termcolor==3.0.1
 tomli==2.2.1
